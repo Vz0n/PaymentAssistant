@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}
+Ver pago
+{% endblock %}
+
+{% block head %}
+<style>
+  .payment-section {
+    min-height: 100vh;
+    position: relative;
+    padding: 80px 0;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-blue);
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+  }
+
+  .payment-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+
+  .payment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.4);
+  }
+
+  .payment-title {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .payment-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .info-item {
+    color: #fff;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .info-item i {
+    margin-right: 1rem;
+    width: 20px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .info-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .notice-text {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .action-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .accept-button {
+    background: rgba(40, 167, 69, 0.2);
+    color: #fff;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+  }
+
+  .accept-button:hover {
+    background: rgba(40, 167, 69, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  }
+
+  .reject-button {
+    background: rgba(220, 53, 69, 0.2);
+    color: #fff;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+  }
+
+  .reject-button:hover {
+    background: rgba(220, 53, 69, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+  }
+
+  .message {
+    display: block;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="payment-section">
+  <div class="container">
+    <div class="payment-card" data-aos="fade-up" data-aos-duration="1000">
+      {% if message %}
+        <div class="message" data-aos="fade-up">{{ message }}</div>
+      {% else %}
+        <h2 class="payment-title">
+          <i class="fas fa-file-invoice-dollar me-2"></i>
+          Información del pago
+        </h2>
+
+        <div class="payment-info" data-aos="fade-up" data-aos-delay="200">
+          <ul class="info-list">
+            <li class="info-item">
+              <i class="fas fa-user"></i>
+              <span class="info-label">Nombre:</span>
+              {{ user_names[0] }} {{ user_names[1] }}
+            </li>
+            <li class="info-item">
+              <i class="fas fa-id-card"></i>
+              <span class="info-label">Cédula de identidad:</span>
+              {{ payment_data[0] }}
+            </li>
+            <li class="info-item">
+              <i class="fas fa-hashtag"></i>
+              <span class="info-label">ID de transacción:</span>
+              {{ payment_data[1] }}
+            </li>
+            <li class="info-item">
+              <i class="fas fa-money-bill-wave"></i>
+              <span class="info-label">Cuota cancelada:</span>
+              {{ payment_data[2] }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="notice-text" data-aos="fade-up" data-aos-delay="300">
+          <i class="fas fa-info-circle me-2"></i>
+          El comprobante del pago está adjunto en el mensaje enviado al correo configurado en la aplicación para redirigir los pagos.
+        </div>
+
+        <input type="hidden" value="{{ id }}" id="payment_id">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <div class="action-buttons" data-aos="fade-up" data-aos-delay="400">
+          <button id="accept" class="action-button accept-button">
+            <i class="fas fa-check me-2"></i>
+            Marcar como verificado
+          </button>
+          <button id="reject" class="action-button reject-button">
+            <i class="fas fa-times me-2"></i>
+            Rechazar
+          </button>
+        </div>
+
+        <span class="message"></span>
+        <script src="/static/js/admin_payments.js"></script>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

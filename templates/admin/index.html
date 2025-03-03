@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}
+Administración
+{% endblock %}
+
+{% block head %}
+<style>
+  .card h2 {
+    color: var(--secondary-blue);
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .hero-section {
+    min-height: 100vh;
+    position: relative;
+    padding: 80px 0;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  }
+
+  .hero-bg.fade-out {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  .hero-bg.fade-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .hero-section.fade-bg {
+    opacity: 0;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:  linear-gradient(135deg, 
+        rgba(34, 10, 139, 0.541) 0%, 
+        rgba(4, 3, 75, 0.9) 100%);
+    z-index: 1;
+  }
+
+
+  .hero-section .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 65px rgba(30, 4, 124, 0.5);
+  }
+
+  .welcome-text {
+    color: #fff;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-btn {
+    width: 100%;
+    height: 100%;
+    padding: 20px 75px;
+    font-size: 0.90rem;
+    transition: all 0.3s ease;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-5px);
+  }
+
+  .user-badge {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px 25px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 1rem;
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .user-badge:hover {
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    transform: translateY(-4px);
+  }
+
+  .hero-section img {
+    filter: brightness(0) invert(1) drop-shadow(0 8px 25px rgba(0, 0, 0, 0.4)) !important;
+    transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  }
+
+  .hero-section img:hover {
+    filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(1500%) hue-rotate(200deg) brightness(105%) contrast(110%) drop-shadow(0 8px 25px rgba(13, 110, 253, 0.5)) !important;
+    transform: translateY(-5px);
+  }
+
+  @media (max-width: 768px) {
+    .welcome-text {
+      font-size: 2.5rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="hero-section d-flex align-items-center">
+  <div class="container">
+    <div data-aos="fade-up" data-aos-duration="1000">
+      <img src="{{ url_for('static', filename='icon.svg') }}" alt="Web Icon" class="mb-4 d-block mx-auto" style="width: 210px; height: auto;">
+      <h1 class="welcome-text text-center">Panel de Administración</h1>
+      <div class="text-center col-12 mb-4">
+        <div class="user-badge">
+          <i class="fas fa-user-shield me-2"></i>
+          Administrador
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center g-4">
+      <div class="col-md-4" data-aos="zoom-in-up" data-aos-delay="200">
+        <div class="card p-4 text-center">
+          <h2 class="mb-4">Gestión de Usuarios</h2>
+          <a href="users" class="btn btn-primary btn-custom nav-btn mb-3 d-flex align-items-center justify-content-center">
+            <i class="fas fa-users me-2"></i>
+            Usuarios
+
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="zoom-in-up" data-aos-delay="300">
+        <div class="card p-4 text-center">
+          <h2 class="mb-4">Gestión de Pagos</h2>
+          <a href="/admin/payments" class="btn btn-primary btn-custom nav-btn mb-3 d-flex align-items-center justify-content-center">
+            <i class="fas fa-money-check-alt me-2"></i>
+            Pagos
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="zoom-in-up" data-aos-delay="400">
+        <div class="card p-4 text-center">
+          <h2 class="mb-4">Configuración</h2>
+          <a href="settings" class="btn btn-primary btn-custom nav-btn mb-3 d-flex align-items-center justify-content-center">
+            <i class="fas fa-cog me-2"></i>
+            Ajustes
+          </a>
+
+        </div>
+      </div>
+      <div class="col-12 mt-4" data-aos="zoom-in-up" data-aos-delay="600">
+        <div class="text-center">
+          <a href="/account/logout" class="btn btn-outline-light btn-custom">
+            <i class="fas fa-sign-out-alt me-2"></i>
+            Cerrar sesión
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="theme-switcher" title="Cambiar fondo">
+    <i class="fas fa-image"></i>
+  </button>
+</div>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}
+Iniciar sesión
+{% endblock %}
+
+{% block head %}
+<style>
+  .login-section {
+    min-height: 100vh;
+    position: relative;
+    padding: 80px 0;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  }
+
+  .hero-bg.fade-out {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  .hero-bg.fade-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .login-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:  linear-gradient(135deg, 
+        rgba(34, 10, 139, 0.541) 0%, 
+        rgba(4, 3, 75, 0.9) 100%);
+    z-index: 1;
+  }
+
+  .login-section .container {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+  }
+
+  .login-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .login-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .login-form {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2rem;
+    border-radius: 15px;
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: var(--primary-blue);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    margin-top: 1rem;
+    box-shadow: 0 8px 25px rgba(30, 4, 124, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .login-btn:hover {
+    background: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(30, 4, 124, 0.5);
+  }
+
+  .forgot-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+
+  .forgot-link:hover {
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .back-btn {
+    padding: 12px 25px;
+    font-size: 0.90rem;
+    box-shadow: 0 8px 25px rgba(30, 4, 124, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(30, 4, 124, 0.5);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .message {
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .login-section img {
+    filter: brightness(0) invert(1) drop-shadow(0 8px 25px rgba(0, 0, 0, 0.4)) !important;
+    transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  }
+
+  .login-section img:hover {
+    filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(1500%) hue-rotate(200deg) brightness(105%) contrast(110%) drop-shadow(0 8px 25px rgba(13, 110, 253, 0.5)) !important;
+    transform: translateY(-5px);
+  }
+
+ 
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="login-section">
+  <div class="container">
+    <div data-aos="fade-up" data-aos-duration="1000" class="text-center">
+      <img src="{{ url_for('static', filename='icon.svg') }}" alt="Icóno app" class="mb-4 d-block mx-auto" style="width: 150px; height: auto;">
+      <h1 class="login-title">Bienvenido de nuevo</h1>
+      <p class="login-subtitle">Introduce tus credenciales para acceder al sitio</p>
+    </div>
+
+    <div class="login-form" data-aos="fade-up" data-aos-delay="200">
+      <form method="post">
+        <input type="email" name="email" placeholder="Correo electrónico" class="form-control" required>
+        <input type="password" name="password" placeholder="Contraseña" class="form-control" required>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if message %}
+          <p class="message">{{ message }}</p>
+        {% endif %}
+        <button type="submit" class="login-btn">
+          <i class="fas fa-sign-in-alt me-2"></i>
+          Iniciar sesión
+        </button>
+        <div class="text-center">
+          <a href="forgot" class="forgot-link">
+            <i class="fas fa-key me-1"></i>
+            He olvidado mi contraseña
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="400">
+      <a href="/" class="btn btn-outline-light back-btn">
+        <i class="fas fa-arrow-left me-2"></i>
+        Volver al inicio
+      </a>
+    </div>
+
+    <button id="theme-switcher" title="Cambiar fondo">
+      <i class="fas fa-image"></i>
+    </button>
+  </div>
+</div>
+{% endblock %}

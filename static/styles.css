@@ -1,0 +1,219 @@
+/* Define some styles to override here... */
+:root {
+    --primary-blue: #09172b;
+    --secondary-blue: #09355a;
+    --light-blue: #e7f1ff;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    min-height: 100vh;
+}
+
+#theme-switcher {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.15);
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+#theme-switcher:hover {
+    transform: translateY(-3px);
+}
+
+#theme-switcher i {
+    color: white;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hero-bg.bg-1 {
+    background-image: url("img/1.jpg");
+    opacity: 1;
+}
+
+.hero-bg.bg-2 {
+    background-image: url("img/2.jpg");
+    opacity: 0;
+}
+
+.hero-bg.bg-3 {
+    background-image: url("img/3.jpg");
+    opacity: 0;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+.hero-section {
+    min-height: 100vh;
+    position: relative;
+    padding: 80px 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(34, 10, 139, 0.541) 0%, 
+        rgba(4, 3, 75, 0.9) 100%);
+    z-index: -1;
+}
+
+.hero-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-custom {
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.8px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-blue);
+    transform: translateY(-2px);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Add hover effects for register and login buttons */
+.fa-user-plus, .fa-sign-in-alt {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .fa-user-plus,
+.btn:hover .fa-sign-in-alt {
+    transform: translateY(-2px);
+}
+
+/* Add transition to button text */
+.btn {
+    position: relative;
+}
+
+.btn span {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.welcome-text {
+    color: #fff;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    letter-spacing: 0.2px;
+}
+
+.user-badge {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px 25px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.95rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.card h3 {
+    color: var(--secondary-blue);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: -0.2px;
+}
+
+.action-card {
+    background: var(--light-blue);
+}
+
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+    }
+
+    .btn-custom {
+        font-size: 0.8rem;
+        padding: 10px 25px;
+    }
+}
