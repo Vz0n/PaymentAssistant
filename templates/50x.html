@@ -3,106 +3,14 @@
 Error
 {% endblock %}
 
-{% block head %}
-<style>
-  .error-section {
-    min-height: 100vh;
-    position: relative;
-    padding: 80px 0;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--primary-blue);
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-  }
-
-  .error-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 2.5rem;
-    text-align: center;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    width: 90%;
-    margin: 0 auto;
-    transition: all 0.3s ease;
-  }
-
-  .error-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.4);
-  }
-
-  .error-message {
-    color: #fff;
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    font-weight: 300;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .error-details {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-bottom: 2rem;
-    padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .home-button {
-    display: inline-block;
-    padding: 15px 35px;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-  }
-
-  .home-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-3px);
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
-    color: #fff;
-  }
-
-  .error-icon {
-    font-size: 4rem;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-</style>
-{% endblock %}
-
 {% block body %}
-<div class="error-section">
-  <div class="container">
-    <div class="error-card" data-aos="fade-up" data-aos-duration="1000">
-      <i class="fas fa-exclamation-triangle error-icon"></i>
-      <p class="error-message">{{ message }}. Si esto sigue ocurriendo contacta a soporte.</p>
-      
-      {% if session["role"] == "admin" %}
-        <div class="error-details" data-aos="fade-up" data-aos-delay="200">
-          <i class="fas fa-code me-2"></i>
-          {{ error }}
-        </div>
-      {% endif %}
-
-      <a href="/" class="home-button" data-aos="fade-up" data-aos-delay="400">
-        <i class="fas fa-home me-2"></i>
-        Volver a la página principal
-      </a>
-    </div>
-  </div>
+<header class="content-header">
+    <h1>Error interno</h1>
+</header>
+<div class="text">
+    <p>Ha ocurrido un error interno al intentar cargar la página o procesar tus datos.
+        Si esto sigue ocurriendo, contacta a los administradores de la página.
+    </p>
+    <div data-href="" class="link">Volver</div>
 </div>
 {% endblock %}

@@ -3,159 +3,16 @@
 Acerca de la web
 {% endblock %}
 
-{% block head %}
-<style>
-  .about-section {
-    min-height: 100vh;
-    position: relative;
-    padding: 80px 0;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-  }
-
-  .hero-bg.fade-out {
-    opacity: 0;
-    transform: scale(1.05);
-  }
-
-  .hero-bg.fade-in {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  .about-section::before{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:  linear-gradient(135deg, 
-        rgba(34, 10, 139, 0.541) 0%, 
-        rgba(4, 3, 75, 0.9) 100%);
-    z-index: 1;
-  }
-
-  .about-section .container {
-    position: relative;
-    z-index: 2;
-    color: #fff;
-  }
-
-  .about-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .about-content {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 2rem;
-    border-radius: 15px;
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    margin-bottom: 2rem;
-  }
-
-  .about-text {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  .back-btn {
-    padding: 12px 25px;
-    font-size: 0.90rem;
-    box-shadow: 0 8px 25px rgba(30, 4, 124, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .back-btn:hover {
-    box-shadow: 0 15px 35px rgba(30, 4, 124, 0.5);
-    transform: translateY(-3px);
-  }
-
-  .about-section img {
-    filter: brightness(0) invert(1) drop-shadow(0 8px 25px rgba(0, 0, 0, 0.4)) !important;
-    transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
-  }
-
-  .about-section img:hover {
-    filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(1500%) hue-rotate(200deg) brightness(105%) contrast(110%) drop-shadow(0 8px 25px rgba(13, 110, 253, 0.5)) !important;
-    transform: translateY(-5px);
-  }
-
-  .theme-switcher {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.15);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 8px 25px rgba(30, 4, 124, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .theme-switcher:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(30, 4, 124, 0.5);
-  }
-
-  .theme-switcher i {
-    color: white;
-    font-size: 1.2rem;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  }
-</style>
-{% endblock %}
-
 {% block body %}
-<div class="about-section">
-  <div class="container">
-    <div data-aos="fade-up" data-aos-duration="1000">
-      <img src="{{ url_for('static', filename='icon.svg') }}" alt="Web Icon" class="mb-4 d-block mx-auto" style="width: 150px; height: auto;">
-      <h1 class="about-title text-center">Acerca de PaymentAssistant</h1>
-    </div>
-
-    <div class="about-content" data-aos="fade-up" data-aos-delay="200">
-      <p class="about-text">
-        <strong>Esta aplicación fue desarrollada con Python utilizando la librería Flask junto con Bootstrap 5. Súper sencilla</strong>
-      </p>
-      <p class="about-text">
-        Por ahora esto no tiene otros propósitos más que simplemente estar en el repositorio de GitHub
-        de un random y servir como un proyecto personal.
-      </p>
-    </div>
-
-    <div class="text-center" data-aos="fade-up" data-aos-delay="400">
-      <a href="/" class="btn btn-outline-light back-btn">
-        <i class="fas fa-arrow-left me-2"></i>
-        Volver al inicio
-      </a>
-    </div>
-
-    <button id="theme-switcher" title="Cambiar fondo">
-      <i class="fas fa-image"></i>
-    </button>
-  </div>
+<header class="content-header">
+    <h1>Acerca de la aplicación</h1>
+</header>
+<div class="text">
+    <p>
+        Esta aplicación está programada en el lenguaje Python utilizando el marco de desarrollo Flask para 
+        proveer el servidor web. En el stack del frontend se utilizó CSS y JavaScript junto con la libreria
+        AOS.js.
+    </p>
+    <div data-href="" class="link">Volver</div>
 </div>
 {% endblock %}
