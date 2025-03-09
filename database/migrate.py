@@ -30,7 +30,7 @@ def check_migration():
        # If the table does not exists, this will throw an error and
        # it will run the migrations.
        # TODO: Change this to something better
-       db_version = db.execute_query("SELECT value FROM data WHERE key='schema_version'")[0][0]
+       db_version = db.execute_query("SELECT value FROM data WHERE key='schema_version'")[0]
 
        if db_version < schema_version:
            app_logger.info("Updating database schema...")
