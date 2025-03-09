@@ -120,6 +120,7 @@ def forgot():
                 return render_template("account/forgot.html",
                                         message="Un error extraño ha ocurrido al enviar el correo. Por favor notifica a los administradores."), 500
             
+            # TODO: Set an expiry time for the token, as this can leverage vulnerabilities.
             db.execute_update("UPDATE users SET password_token = ? WHERE id = ?", token, result[0])
         
         db.close()
