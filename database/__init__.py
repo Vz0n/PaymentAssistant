@@ -7,11 +7,15 @@ class Database:
         self.handle = connect(self.name)
 
     # Executes modify/update operations
-    def execute_query(self, stmt, *params) -> list[any]:
+    def execute_query(self, stmt, *params) -> list[tuple[any]] | tuple[any]:
         cursor = self.handle.cursor()
         data = cursor.execute(stmt, params).fetchall()
 
         cursor.close()
+
+        if len(data) == 1:
+            return data[0]
+        
         return data
 
     # Executes fetch/query operations
