@@ -11,7 +11,7 @@ admin = Blueprint("admin", __name__)
 @admin.before_request
 def check_admin():
     if not session.get("role", "") == "admin":
-        return redirect("/", 302)
+        return redirect("/", 303)
 
 @admin.get("/")
 def index():
@@ -66,8 +66,8 @@ def view_payment(payment_id: str):
          return render_template("admin/view_payment.html", 
                                 message="El pago al que intentas acceder no existe.")
     
-    return render_template("admin/view_payment.html", payment_data=user_payment[0],
-                           user_names=user_names[0], id=payment_id)
+    return render_template("admin/view_payment.html", payment_data=user_payment,
+                           user_names=user_names, id=payment_id)
 
 @admin.post("/payments/<action>")
 def set_payment(action: str):
@@ -77,16 +77,14 @@ def set_payment(action: str):
           return "Debes dar una ID de pago válida.", 400
     
      db = Database()
-     result = db.execute_query("SELECT user,fee_number FROM verif_pending_payments WHERE id=?", pid)
+     user = db.execute_query("SELECT user,fee_number FROM verif_pending_payments WHERE id=?", pid)
 
-     if len(result) < 1:
+     if len(user) < 1:
           db.close()
           return "El pago al que haces referencia fue eliminado.", 400
-     
-     user = result[0]
-             
+
      if action == "accept":
-        fees: list[int] = loads(db.execute_query("SELECT pending_fees FROM users WHERE id=?", user[0])[0][0])
+        fees: list[int] = loads(db.execute_query("SELECT pending_fees FROM users WHERE id=?", user[0])[0])
         fees.remove(user[1])
         db.execute_update("UPDATE users SET pending_fees=json(?)", dumps(fees))
 

@@ -24,13 +24,13 @@ METHODS = {
 
 @payment.before_request
 def before():
-    if not "role" in session:
-        return redirect("/", 302)
+    if "role" not in session:
+        return redirect("/account/login", 303)
 
 @payment.get("/")
 def index():
     db = Database()
-    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id=?", session["id"])[0][0]
+    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session["id"])[0][0]
     db.close()
 
     try:
@@ -52,8 +52,8 @@ def init():
     fee_number = request.form.get("fee_number", "")
     db = Database()
 
-    pending_fees = loads(db.execute_query("SELECT pending_fees FROM users WHERE id=?", session.get("id"))[0][0])
-    sent_manual = db.execute_query("SELECT id FROM verif_pending_payments WHERE user=?", session.get("id"))
+    pending_fees = loads(db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session.get("id"))[0])
+    sent_manual = db.execute_query("SELECT id FROM verif_pending_payments WHERE user = ?", session.get("id"))
     db.close()
 
     if not match_regex(fee_number, r"[0-9]") or not match_regex(method, r"[a-z]"):
@@ -68,7 +68,7 @@ def init():
         flash("Tienes un pago pendiente por verificar. No puedes interactuar con esta sección hasta que se verifique tu pago.")
         return redirect("error", 302)
 
-    ptype = METHODS.get(method)
+    ptype = METHODS.get(method, "manual")
 
     if not ptype:
         flash("Has introducido un método de pago desconocido.")

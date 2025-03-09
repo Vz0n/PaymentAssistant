@@ -13,7 +13,7 @@ account = Blueprint("account", __name__)
 def login():
     # Don't allow authenticated users to see this page.
     if "user" in session:
-        return redirect("/", 301)
+        return redirect("/", 303)
 
     if request.method == "POST":
         # Check the user credentials
@@ -27,22 +27,22 @@ def login():
         passwd_hash = sha256(passwd.encode()).digest().hex()
         db = Database()
 
-        result = db.execute_query("SELECT id,fname,lname,role,email FROM users WHERE email=? and password=?", email, passwd_hash)
+        result = db.execute_query("SELECT id,fname,lname,role,email FROM users WHERE email = ? and password = ?", email, passwd_hash)
         db.close()
 
         if len(result) < 1:
             return render_template("account/login.html", message="Credenciales inválidas.")
         
-        session["id"] = result[0][0]
-        session["fname"] = result[0][1]
-        session["lname"] = result[0][2]
-        session["role"] = result[0][3]
-        session["email"] = result[0][4]
+        session["id"] = result[0]
+        session["fname"] = result[1]
+        session["lname"] = result[2]
+        session["role"] = result[3]
+        session["email"] = result[4]
         
         if session["role"] == "admin":
-            return redirect("/admin/", 303)
-        else:
-            return redirect("/", 303)
+            return redirect("/admin/", 302)
+        
+        return redirect("/", 302)
     
     return render_template("account/login.html")
 
@@ -50,7 +50,7 @@ def login():
 def register():
     # Don't allow authenticated users to see this page.
     if "role" in session:
-        return redirect("/", 301)
+        return redirect("/", 303)
 
     if request.method == "POST":
         email = request.form.get("email", "")
@@ -81,7 +81,7 @@ def register():
         passwd_hash = sha256(passwd.encode()).digest().hex()
 
         db = Database()
-        result = db.execute_query("SELECT id FROM users WHERE email=?", email)
+        result = db.execute_query("SELECT id FROM users WHERE email = ?", email)
 
         if len(result) > 0:
             return render_template("account/register.html", 
@@ -103,7 +103,7 @@ def forgot():
         if not match_regex(email, r"^\w+@\w+(?:\.\w+)+$"):
             return render_template("account/forgot.html", message="Introduce un correo válido.")
         
-        result = db.execute_query("SELECT id FROM users WHERE email=?", email)
+        result = db.execute_query("SELECT id FROM users WHERE email = ?", email)
 
         if len(result) > 0:
             token = generate_token()
@@ -120,7 +120,7 @@ def forgot():
                 return render_template("account/forgot.html",
                                         message="Un error extraño ha ocurrido al enviar el correo. Por favor notifica a los administradores."), 500
             
-            db.execute_update("UPDATE users SET password_token=? WHERE id=?", token, result[0][0])
+            db.execute_update("UPDATE users SET password_token = ? WHERE id = ?", token, result[0])
         
         db.close()
         return render_template("account/forgot.html", 
@@ -137,12 +137,12 @@ def reset_password():
 
     try:
         token = query_string[query_string.index("token") + 1]
-        result = db.execute_query("SELECT id FROM users WHERE password_token=?", token)
+        result = db.execute_query("SELECT id FROM users WHERE password_token = ?", token)
 
         if len(result) == 0:
             raise ValueError
         
-        user = result[0][0]
+        user = result[0]
 
         if request.method == "POST":
             passwd = request.form.get("new_password", "")
@@ -152,20 +152,20 @@ def reset_password():
 
             passwd_hash = sha256(passwd.encode()).digest().hex()
 
-            db.execute_update("UPDATE users SET password=?, password_token=NULL WHERE id=?", passwd_hash, user)
+            db.execute_update("UPDATE users SET password = ?, password_token = NULL WHERE id = ?", passwd_hash, user)
 
             return redirect("/account/login", 301)
         
         return render_template("account/reset_password.html")
     except ValueError:
-        return redirect("/", 301)
+        return redirect("/", 303)
     finally:
         db.close()
 
 @account.route("/profile", methods=["GET", "POST"])
 def profile():
     if "role" not in session:
-        return redirect("/", 302)
+        return redirect("/", 303)
     
     db = Database()
     message = None
@@ -183,17 +183,17 @@ def profile():
             message = "Utiliza solo letras en tu nombre."
 
         if not message:
-            db.execute_update("UPDATE users SET fname=?,lname=?,send_notifications=? WHERE id=?",
+            db.execute_update("UPDATE users SET fname = ?,lname = ?,send_notifications = ? WHERE id = ?",
                           fname, lname, notifications, sid)
             session["fname"] = fname
             session["lname"] = lname
             
             message = "Datos actualizados correctamente."
 
-    user_data = db.execute_query("SELECT fname,lname,email,send_notifications FROM users WHERE id=?", sid)
+    user_data = db.execute_query("SELECT fname,lname,email,send_notifications FROM users WHERE id = ?", sid)
     db.close()
 
-    return render_template("account/profile.html", data=user_data[0], message=message) 
+    return render_template("account/profile.html", data=user_data, message=message) 
 
 @account.get("/logout")
 def logout():
