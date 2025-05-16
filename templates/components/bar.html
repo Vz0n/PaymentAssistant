@@ -1,4 +1,15 @@
+{% set role = session.get("role", "guest") %}
 <nav class="navbar">
-    <a href="/account/login">Iniciar sesión</a>
-    <a href="/account/register">Registrarse</a>
+    <a href="/" class="navbar-left">PaymentAssistant</a>
+    {% if role != "guest" %}
+      <a href="/payment/" class="navbar-right">Pago de cuota</a>
+      {% if role == "admin" %}
+        <a href="/admin/" class="navbar-right">Administrar</a>
+      {% endif %}
+      <a href="/account/profile" class="navbar-right">Perfil</a>
+      <a href="/account/logout" class="navbar-right">Cerrar sesión</a>
+    {% else %}
+      <a href="/account/login" class="navbar-right">Iniciar sesión</a>
+      <a href="/account/register" class="navbar-right">Registrarse</a>
+    {% endif %}
 </nav>

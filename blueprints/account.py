@@ -1,5 +1,5 @@
 from flask.blueprints import Blueprint
-from flask import request, session, redirect, render_template, url_for
+from flask import request, session, redirect, render_template, url_for, flash, get_flashed_messages
 from flask import current_app as app
 from hashlib import sha256
 from database import Database
@@ -21,8 +21,8 @@ def login():
         passwd = request.form.get("password", "")
 
         if passwd == "" or email == "":
-            return render_template("account/login.html", 
-                                   message="Por favor, rellena todos los campos")
+            flash("Rellena todos los campos", "error")
+            return redirect("/account/login")
         
         passwd_hash = sha256(passwd.encode()).digest().hex()
         db = Database()
@@ -31,7 +31,8 @@ def login():
         db.close()
 
         if len(result) < 1:
-            return render_template("account/login.html", message="Credenciales inválidas.")
+            flash("Credenciales inválidas", "error")
+            return redirect("/account/login")
         
         session["id"] = result[0]
         session["fname"] = result[1]
@@ -44,7 +45,7 @@ def login():
         
         return redirect("/", 302)
     
-    return render_template("account/login.html")
+    return render_template("account/login.html", messages=get_flashed_messages(True))
 
 @account.route("/register", methods=["POST", "GET"])
 def register():
@@ -76,7 +77,8 @@ def register():
              message = "La contraseña debe tener por lo menos 6 carácteres."
 
         if message != None:
-            return render_template("account/register.html", message=message)
+            flash(message, "error")
+            return redirect("/account/register")
              
         passwd_hash = sha256(passwd.encode()).digest().hex()
 
@@ -84,15 +86,16 @@ def register():
         result = db.execute_query("SELECT id FROM users WHERE email = ?", email)
 
         if len(result) > 0:
-            return render_template("account/register.html", 
-                                   message=f"Ya existe un usuario registrado con el correo {email}.")
+            flash(f"Ya existe un usuario registrado con el correo {email}.", "error")
+            return redirect("/account/register")
 
         db.execute_update("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, 'user', TRUE, NULL, json_array())", email, fname, lname, passwd_hash)
         db.close()
         
+        flash("Registro completado exitosamente. Ahora inicia sesión", "success")
         return redirect("login", 303)
     
-    return render_template("account/register.html")
+    return render_template("account/register.html", messages=get_flashed_messages(True))
 
 @account.route("/forgot", methods=["GET", "POST"])
 def forgot():

@@ -1,0 +1,64 @@
+#content-text {
+    margin-left: 25px;
+    margin-right: 25px;
+    display: grid;
+    grid-template: 
+                 "header header header" 50px
+                 "  .   .   img" 60px
+                 "text text  . " min-content / min-content 300px 300px;
+    column-gap: 25%;
+
+    .content-header {
+        grid-area: header;
+        margin-bottom: 50px;
+    }
+
+    .text {
+        grid-area: text;
+    }
+
+    img {
+        grid-area: img;
+        animation-name: rotating-image;
+        animation-duration: 4s;
+        animation-iteration-count: infinite;
+    }
+
+}
+
+#content-form {
+    .content-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form {
+        margin: auto;
+        width: min-content;
+        padding: 24px;
+    }
+
+    .form-label {
+        opacity: 0.7;
+        position: relative;
+    }
+
+    .form-input {
+        display: block;
+        margin-bottom: 20px;
+        border: solid 2px;
+        border-color: var(--buttons-color);
+        transition: border-color 100ms;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--hover-color)
+    }
+
+    button {
+        background-color: var(--buttons-color);
+        padding: 13px;
+        border: none;
+    }
+}

@@ -1,8 +1,26 @@
 {% extends "base.html" %}
-{% block title %}
-Iniciar sesión
-{% endblock %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% set page_type = "form" %}
 
 {% block body %}
-login
+<header class="content-header">
+    <h1>¡Bienvenido estudiante!</h1>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+        <span class="{{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% else %}
+      <span>Introduce tus credenciales para iniciar sesión.</span>
+    {% endif %}
+</header>
+<form class="form" method="POST">
+    <label for="email" class="form-label">Correo</label>
+    <input name="email" type="email" class="form-input" required>
+    <label for="password" class="form-label">Contraseña</label>
+    <input name="password" type="password" class="form-input" required> 
+    <input name="csrf_token" value="{{ csrf_token() }}" hidden>
+    <button type="submit">Iniciar sesión</button>
+</form>
 {% endblock %}

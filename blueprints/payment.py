@@ -30,7 +30,7 @@ def before():
 @payment.get("/")
 def index():
     db = Database()
-    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session["id"])[0][0]
+    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session["id"])[0]
     db.close()
 
     try:

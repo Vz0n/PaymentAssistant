@@ -1,8 +1,30 @@
 {% extends "base.html" %}
-{% block title %}
-Registrarse
-{% endblock %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% set page_type = "form" %}
 
 {% block body %}
-register
+<header class="content-header">
+    <h1>Registro de estudiantes</h1>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+        <span class="{{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% else %}
+      <span>Introduce tus datos para registrarte en el sistema.</span>
+    {% endif %}
+</header>
+<form class="form" method="POST">
+    <label for="email" class="form-label">Correo</label>
+    <input name="email" type="email" class="form-input" required>
+    <label for="password" class="form-label">Contraseña</label>
+    <input name="password" type="password" class="form-input" required> 
+    <label for="fname" class="form-label">Primer nombre</label>
+    <input name="fname" class="form-input" required>
+    <label for="lname" class="form-label">Segundo nombre</label>
+    <input name="lname" class="form-input" required>
+    <input name="csrf_token" value="{{ csrf_token() }}" hidden>
+    <button type="submit">Registrarse</button>
+</form>
 {% endblock %}
