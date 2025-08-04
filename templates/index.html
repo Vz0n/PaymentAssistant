@@ -5,22 +5,21 @@
 {% set page_type="text" %}
 
 {% block body %}
-<header class="content-header">
+<header class="text-header">
     <h1>PaymentAssistant</h1>
     <span>Un asistente de pagos sencillo.</span>
 </header>
-<main class="text">
-    <p>
+<main class="text-main">
+    <div class="text-container">
+      <p>
         PaymentAssistant es un procesador de pagos sencillos para el pago de las cuotas de tu universidad. 
-        Te permite hacer desde pagos manuales por comprobante hasta pagos por tarjeta.
-    </p>
-    <p>
-        Está diseñado especialmente para las universidades con problemas de largas colas en sus cajas solo
+        Te permite hacer desde pagos manuales por comprobante hasta pagos por tarjeta. Está diseñado especialmente para las universidades con problemas de largas colas en sus cajas solo
         para pagar una cuota... nadie quiere tener que esperar muchas horas solo para hacer eso.
-    </p>
-    <div data-href="about" class="link-button">Acerca de la app</div>
-    <div data-href="payment" class="link-button">Ir a pagar mi cuota</div>
+      </p>
+      <div data-href="about" class="link-button">Acerca de la app</div>
+      <div data-href="payment" class="link-button">Ir a pagar mi cuota</div>
+    </div>
+    <img src="/static/icon.svg" alt="app logo" width="128px" height="128px"/>
 </main>
-<img src="/static/icon.svg" alt="app logo" width="128px" height="128px"/>
 {% endblock %}
 

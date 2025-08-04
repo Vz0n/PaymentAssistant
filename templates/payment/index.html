@@ -3,6 +3,17 @@
 Hacer el pago
 {% endblock %}
 
-{% block head %}
-do payment
+{% set page_type = "text" %}
+
+{% block body %}
+<header class="text-header">
+    <h1>Hacer el pago de la cuota</h1>
+</header>
+<main class="text-main">
+    <p>Para proceder con el pago de la cuota, 
+       primero debe seleccionar un método de pago de los listados a continucación. Luego podrá
+       darle al botón "Siguiente" para proceder.
+    </p>
+    <b class="box-warning">Tasa del dolar: {{ exchange_rate }} Bs.</b>
+</main>
 {% endblock %}
