@@ -1,15 +1,22 @@
-{% set role = session.get("role", "guest") %}
+{% set role = get_session_data("role") %}
 <nav class="navbar">
-    <a href="/" class="navbar-left">PaymentAssistant</a>
-    {% if role != "guest" %}
-      <a href="/payment/" class="navbar-right">Pago de cuota</a>
-      {% if role == "admin" %}
-        <a href="/admin/" class="navbar-right">Administrar</a>
-      {% endif %}
-      <a href="/account/profile" class="navbar-right">Perfil</a>
-      <a href="/account/logout" class="navbar-right">Cerrar sesión</a>
-    {% else %}
-      <a href="/account/login" class="navbar-right">Iniciar sesión</a>
-      <a href="/account/register" class="navbar-right">Registrarse</a>
+    <a href="/">PaymentAssistant</a>
+    <div class="navbar-elements">
+    {% if role != "" %}
+      <a href="/payment" class="link">Cuotas</a>
+    {% if role == "admin" %}
+      <a href="/admin" class="link">Administración</a>
     {% endif %}
+      <menu id="dropdown-menu">
+        <span class="dropdown-menu-span">{{ get_session_data("fname") }} {{ get_session_data("sname") }}</span>
+        <div class="dropdown-links">
+            <a href="/account/profile" class="link">Perfil</a>
+            <a href="/account/logout" class="link">Cerrar sesión</a>
+        </div>
+      </menu>
+    {% else %}
+      <a href="/account/login" class="link">Iniciar sesión</a>
+      <a href="/account/register" class="link">Registrarse</a>
+    {% endif %}
+    </div>
 </nav>

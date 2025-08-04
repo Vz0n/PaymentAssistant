@@ -130,7 +130,7 @@ def manual():
         return redirect("/payment/error", 302)
     
     text = MIMEText(render_template("email/forward.html", ci=ci, email=session.get("email"), 
-                    pid=payment_id, fname=session.get("fname"), lname=session.get("lname"), 
+                    pid=payment_id, fname=session.get("fname"), lname=session.get("sname"), 
                     fee_number=payment_info[1]), "html")
 
     if mimetype == "application/pdf":

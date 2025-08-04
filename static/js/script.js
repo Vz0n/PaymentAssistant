@@ -12,7 +12,7 @@ const COLOR_ANIMATION = [
     }
 ]
 
-async function translateLabel(reverse, labelname){
+async function transitionLabel(reverse, labelname){
     const match = document.querySelector(`label[for=${labelname}]`);
 
     match.animate(COLOR_ANIMATION, {
@@ -46,8 +46,8 @@ function setupLabels(){
 
        if(labelname == "csrf_token") continue;
 
-       input.addEventListener("focusin", (ev) => translateLabel(false, labelname));
-       input.addEventListener("focusout", (ev) => translateLabel(true, labelname));
+       input.addEventListener("focusin", (ev) => transitionLabel(false, labelname));
+       input.addEventListener("focusout", (ev) => transitionLabel(true, labelname));
     }
 }
 
@@ -55,6 +55,10 @@ function setupLabels(){
 
 setupLinks();
 
-if(document.getElementById("content-form") != null) setupLabels();
+let form = document.getElementById("content-form")
+let dropdown_menu = document.getElementById("dropdown-menu");
+
+if(form != null) setupLabels();
+
 
 

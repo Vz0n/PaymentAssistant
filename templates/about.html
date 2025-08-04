@@ -1,7 +1,6 @@
 {% extends "base.html" %}
-{% block title %}
-Acerca de la web
-{% endblock %}
+
+{% block title %}Acerca de la web{% endblock %}
 
 {% set page_type = "text" %}
 
@@ -9,12 +8,12 @@ Acerca de la web
 <header class="content-header">
     <h1>Acerca de la aplicación</h1>
 </header>
-<div class="text">
+<main class="text">
     <p>
         Esta aplicación está programada en el lenguaje Python utilizando el marco de desarrollo Flask para 
         proveer el servidor web. En el stack del frontend se utilizó CSS y JavaScript junto con la libreria
         AOS.js.
     </p>
     <div data-href="" class="link">Volver</div>
-</div>
+</main>
 {% endblock %}

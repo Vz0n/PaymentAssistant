@@ -24,12 +24,18 @@
         animation-iteration-count: infinite;
     }
 
+    .link-button {
+        margin: 5px;
+    }
 }
 
 #content-form {
     .content-header {
         text-align: center;
         margin-bottom: 30px;
+        width: fit-content;
+        margin: auto;
+        width: 50vw;
     }
 
     .form {
@@ -54,11 +60,5 @@
     .form-input:focus {
         outline: none;
         border-color: var(--hover-color)
-    }
-
-    button {
-        background-color: var(--buttons-color);
-        padding: 13px;
-        border: none;
     }
 }

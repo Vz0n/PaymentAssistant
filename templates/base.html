@@ -17,12 +17,10 @@
 <body>
     {% include "components/bar.html" %}
     <div id="background-img"></div>
-    <main>
-        <section id="content-{{ page_type }}" data-aos="fade-up">
-            {% block body %}
-            {% endblock %}
-        </section>
-    </main>
+    <div id="content-{{ page_type }}" data-aos="fade-up">
+      {% block body %}    
+      {% endblock %}
+    </div>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="/static/js/script.js"></script>
     <script>

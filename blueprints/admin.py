@@ -29,7 +29,7 @@ def users():
     except ValueError:
         page = 0
      
-    users_set = db.execute_query("SELECT email,fname,lname FROM users LIMIT ?,?", 8*page, (page + 1)*8)
+    users_set = db.execute_query("SELECT email,fname,sname FROM users LIMIT ?,?", 8*page, (page + 1)*8)
 
     return render_template("admin/users.html", session=session, users=users_set, page=page + 1)
 
@@ -59,7 +59,7 @@ def view_payment(payment_id: str):
     user_payment = db.execute_query("SELECT ci,transaction_id,fee_number,user FROM verif_pending_payments WHERE id=?", payment_id)
     user_id = user_payment[0][3] if len(user_payment) > 0 else -1
 
-    user_names = db.execute_query("SELECT fname,lname FROM users WHERE id=?", user_id)
+    user_names = db.execute_query("SELECT fname,sname FROM users WHERE id=?", user_id)
     db.close()
 
     if len(user_payment) < 1:

@@ -5,6 +5,10 @@ from flask_wtf.csrf import CSRFError
 
 app = Flask(__name__)
 
+# Don't keep templates stuff whitespaces
+app.jinja_options["trim_blocks"] = True 
+app.jinja_options["lstrip_blocks"] = True 
+
 # Setup Extensions
 CSRFProtect(app)
 
@@ -13,17 +17,21 @@ app.register_blueprint(admin, url_prefix="/admin")
 app.register_blueprint(payment, url_prefix="/payment")
 app.register_blueprint(account, url_prefix="/account")
 
+@app.template_global()
+def get_session_data(key: str):
+    return session.get(key, "")
+
 @app.route("/")
 def index():
-    return render_template("index.html", session=session)
+    return render_template("index.html")
 
 @app.route("/about")
 def about():
-    return render_template("about.html", session=session)
+    return render_template("about.html")
 
 @app.errorhandler(404)
 def not_found(_):
-    return render_template("404.html", session=session), 404
+    return render_template("404.html"), 404
 
 @app.errorhandler(405)
 def not_allowed(_):
@@ -31,7 +39,7 @@ def not_allowed(_):
 
 @app.errorhandler(500)
 def generic_err(_):
-    return render_template("50x.html", session=session, message="Ha ocurrido un error extraño"), 500
+    return render_template("50x.html", message="Ha ocurrido un error extraño"), 500
 
 @app.errorhandler(CSRFError)
 def invalid_token_err(_):

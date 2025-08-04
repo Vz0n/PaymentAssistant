@@ -27,7 +27,7 @@ def login():
         passwd_hash = sha256(passwd.encode()).digest().hex()
         db = Database()
 
-        result = db.execute_query("SELECT id,fname,lname,role,email FROM users WHERE email = ? and password = ?", email, passwd_hash)
+        result = db.execute_query("SELECT id,fname,sname,role,email FROM users WHERE email = ? and password = ?", email, passwd_hash)
         db.close()
 
         if len(result) < 1:
@@ -36,7 +36,7 @@ def login():
         
         session["id"] = result[0]
         session["fname"] = result[1]
-        session["lname"] = result[2]
+        session["sname"] = result[2]
         session["role"] = result[3]
         session["email"] = result[4]
         
@@ -57,7 +57,7 @@ def register():
         email = request.form.get("email", "")
         passwd = request.form.get("password", "")
         fname = request.form.get("fname", "")
-        lname = request.form.get("lname", "")
+        sname = request.form.get("sname", "")
 
         message = None
 
@@ -70,7 +70,7 @@ def register():
         if not match_regex(email, r"^\w+@\w+(?:\.\w+)+$"):
              message = "Introduce un correo válido."
         
-        if not match_regex(fname + lname, r"^[a-zA-Z]+$"):
+        if not match_regex(fname + sname, r"^[a-zA-Z]+$"):
              message = "Introduce un primer y segundo nombre válidos."
 
         if len(passwd) < 6:
@@ -89,7 +89,7 @@ def register():
             flash(f"Ya existe un usuario registrado con el correo {email}.", "error")
             return redirect("/account/register")
 
-        db.execute_update("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, 'user', TRUE, NULL, json_array())", email, fname, lname, passwd_hash)
+        db.execute_update("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, 'user', TRUE, NULL, json_array())", email, fname, sname, passwd_hash)
         db.close()
         
         flash("Registro completado exitosamente. Ahora inicia sesión", "success")
@@ -104,7 +104,8 @@ def forgot():
         db = Database()
 
         if not match_regex(email, r"^\w+@\w+(?:\.\w+)+$"):
-            return render_template("account/forgot.html", message="Introduce un correo válido.")
+            flash("Introduce un correo válido.", "error")
+            return redirect("/account/forgot")
         
         result = db.execute_query("SELECT id FROM users WHERE email = ?", email)
 
@@ -112,7 +113,8 @@ def forgot():
             token = generate_token()
             mailer = Mailer()
     
-            text = render_template("email/reset_password.html", req=request, url=url_for("account.reset_password", _external=True, token=token))
+            text = render_template("email/reset_password.html", req=request, 
+                                   url=url_for("account.reset_password", _external=True, token=token))
             email_template = MIMEText(text, "html")
             
             email_template.add_header("Subject", "Asistencia de pagos - Reinicio de contraseña")
@@ -120,27 +122,23 @@ def forgot():
             email_template.add_header("To", email)
             
             if not mailer.send_mail(email_template): 
-                return render_template("account/forgot.html",
-                                        message="Un error extraño ha ocurrido al enviar el correo. Por favor notifica a los administradores."), 500
+                flash("Un error extraño ha ocurrido al enviar el correo. Por favor notifica a los administradores.", "error")
+                return redirect("/account/forgot")
             
             # TODO: Set an expiry time for the token, as this can leverage vulnerabilities.
             db.execute_update("UPDATE users SET password_token = ? WHERE id = ?", token, result[0])
         
         db.close()
-        return render_template("account/forgot.html", 
-                               message="Hemos enviado un correo de recuperación a la cuenta, en caso de existir.")
+        flash("Hemos enviado un correo de recuperación a la cuenta, en caso de existir.", "success")
     
-    return render_template("account/forgot.html")
+    return render_template("account/forgot.html", messages=get_flashed_messages(True))
 
-@account.route("/reset_password", methods=["GET", "POST"])
-def reset_password():
-    query_string = request.query_string.decode("utf-8", errors="ignore").split("=")
+@account.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token: str):
     db = Database()
-    token = ""
     user = None
 
     try:
-        token = query_string[query_string.index("token") + 1]
         result = db.execute_query("SELECT id FROM users WHERE password_token = ?", token)
 
         if len(result) == 0:
@@ -150,17 +148,23 @@ def reset_password():
 
         if request.method == "POST":
             passwd = request.form.get("new_password", "")
+            passwd_confirm = request.form.get("new_password_confirm", "")
             if len(passwd) < 6:
-                return render_template("account/reset_password.html", 
-                                       message="Por favor, introduce una contraseña con mínimo 6 carácteres.")
+                flash("Por favor, introduce una contraseña con mínimo 6 carácteres.", "error")
+                return redirect("/account/reset_password")
+
+            if passwd != passwd_confirm:
+                flash("Las contraseñas no coinciden.", "error")
+                return redirect("/account/reset_password")
 
             passwd_hash = sha256(passwd.encode()).digest().hex()
 
             db.execute_update("UPDATE users SET password = ?, password_token = NULL WHERE id = ?", passwd_hash, user)
 
+            flash("Contraseña reiniciada exitósamente.", "success")
             return redirect("/account/login", 301)
         
-        return render_template("account/reset_password.html")
+        return render_template("account/reset_password.html", messages=get_flashed_messages(True))
     except ValueError:
         return redirect("/", 303)
     finally:
@@ -177,27 +181,29 @@ def profile():
 
     if request.method == "POST":
         fname = request.form.get("fname", "")
-        lname = request.form.get("lname", "")
+        sname = request.form.get("sname", "")
         notifications = False if request.form.get("enable_notifications") == None else True
         
-        if fname == "" or lname == "":
-            message = "Por favor, rellena los campos"
+        if fname == "" or sname == "":
+            message = ("Por favor, rellena los campos", "error")
         
-        if not match_regex(fname + lname, r"^[a-zA-Z]+$"):
-            message = "Utiliza solo letras en tu nombre."
+        if not match_regex(fname + sname, r"^[a-zA-Z]+$"):
+            message = ("Por favor, solo utiliza letras en tu nombre.", "error")
 
         if not message:
-            db.execute_update("UPDATE users SET fname = ?,lname = ?,send_notifications = ? WHERE id = ?",
-                          fname, lname, notifications, sid)
+            db.execute_update("UPDATE users SET fname = ?, sname = ?, send_notifications = ? WHERE id = ?",
+                          fname, sname, notifications, sid)
             session["fname"] = fname
-            session["lname"] = lname
+            session["sname"] = sname
             
-            message = "Datos actualizados correctamente."
+            message = ("Datos actualizados correctamente.", "success")
 
-    user_data = db.execute_query("SELECT fname,lname,email,send_notifications FROM users WHERE id = ?", sid)
+        flash(message[0], message[1])
+
+    user_data = db.execute_query("SELECT fname,sname,email,send_notifications FROM users WHERE id = ?", sid)
     db.close()
 
-    return render_template("account/profile.html", data=user_data, message=message) 
+    return render_template("account/profile.html", data=user_data, messages=get_flashed_messages(True)) 
 
 @account.get("/logout")
 def logout():

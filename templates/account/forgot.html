@@ -1,8 +1,27 @@
 {% extends "base.html" %}
-{% block title %}
-Contraseña olvidada
-{% endblock %}
+
+{% block title %}Contraseña olvidada{% endblock %}
+
+{% set page_type = "form" %}
 
 {% block body %}
-forgot password
+<header class="content-header">
+    <h1>Recuperación de contraseña</h1>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+        <span class="{{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% else %}
+      <p class="paragraph">
+        Introduce el correo electrónico que usaste para registrarte.
+        Te enviaremos un correo de recuperación con un enlace para reiniciar la contraseña.
+      </p>
+    {% endif %}
+</header>
+<form class="form" method="POST">
+    <label for="email" class="form-label">Correo de la cuenta</label>
+    <input name="email" type="email" class="form-input" required>
+    <input name="csrf_token" value="{{ csrf_token() }}" hidden>
+    <button type="submit">Recuperar contraseña</button>
+</form>
 {% endblock %}
