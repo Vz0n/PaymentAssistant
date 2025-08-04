@@ -35,7 +35,15 @@ button, .link-button, .link {
 button, .link-button {
     background-color: var(--buttons-color);
     padding: 13px;
+    text-align: center;
     border: none;
+}
+
+.text-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .link {
@@ -44,7 +52,7 @@ button, .link-button {
 }
 
 .link:hover, .link-button:hover {
-    scale: 1.1;
+    scale: 1.03;
     box-shadow: 1px 1px 15px var(--primary-color);
 }
 
@@ -113,5 +121,13 @@ button, .link-button {
         justify-content: end;
         width: 88%;
     }
+}
+
+.box-warning {
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    color: yellow;
+    margin: auto;
+    padding: 5px;
 }
 

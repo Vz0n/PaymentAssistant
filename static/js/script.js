@@ -29,7 +29,7 @@ async function transitionLabel(reverse, labelname){
 */
 
 function setupLinks(){
-    var links = document.getElementsByClassName("link");
+    var links = document.getElementsByClassName("link-button");
 
     for(let link of links){ 
         let href = link.getAttribute("data-href");

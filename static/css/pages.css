@@ -3,29 +3,25 @@
     margin-right: 25px;
     display: grid;
     grid-template: 
-                 "header header header" 50px
-                 "  .   .   img" 60px
-                 "text text  . " min-content / min-content 300px 300px;
+                 "header header header" 100px
+                 "content  content  content" max-content
+                 "content  content  content" max-content;
     column-gap: 25%;
 
-    .content-header {
+    .text-header {
         grid-area: header;
-        margin-bottom: 50px;
+        text-align: center;
     }
 
-    .text {
-        grid-area: text;
-    }
-
-    img {
-        grid-area: img;
-        animation-name: rotating-image;
-        animation-duration: 4s;
-        animation-iteration-count: infinite;
+    .text-main {
+        grid-area: content;
+        display: flex;
+        justify-content: center;
+        gap: 15%;
     }
 
     .link-button {
-        margin: 5px;
+        justify-self: end;
     }
 }
 
