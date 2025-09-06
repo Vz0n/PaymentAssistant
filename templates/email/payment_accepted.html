@@ -2,14 +2,12 @@
     <h1>Asistente de pagos</h1>
 </header>
 <main>
-    <p>Hola, estimado estudiante</p>
-    <p>Le enviamos este correo para notificarle que hoy es la fecha del pago de la cuota número {{ count }} 
-            y que debe pagarla ya que si no, no podrá entrar a la universidad.</p>
-        
-    <a href="{{ url }}">Haz click aquí para ir a pagarla</a>
+    <span>Hola, {{ username }}</span>
+    <p>El recibo de tu pago con ID {{ payment_id }} ha sido aprobado.</p>
+    <p>Ahora podrás entrar al instituto sin problemas.</p>
 </main>
 <footer>
-    <span>Enviado por PaymentAssistant</p>
+    <span>Enviado por PaymentAssistant</span>
 </footer>
 <style>
     * {

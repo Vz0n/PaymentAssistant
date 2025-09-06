@@ -17,7 +17,7 @@
 <body>
     {% include "components/bar.html" %}
     <div id="background-img"></div>
-    <div id="content-{{ page_type }}" data-aos="fade-up">
+    <div id="content-{{ page_type }}" data-aos="fade-up" data-to-blurry>
       {% block body %}    
       {% endblock %}
     </div>

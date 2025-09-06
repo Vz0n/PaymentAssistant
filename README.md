@@ -1,17 +1,23 @@
 # PaymentAssistant
 
-This is a project that I made for something and it seems that it won't be used for that something, so i decided to make it open source.
-
-**Note:** Personally, I don't think this code is well made (specially the frontend) but you're free to use and contribute to it.
+This is a project that I made for a exhibition that was not used for anything else.
 
 ## Description 
 
-It's a simple Python Flask application for a fee payment system. Was going to serve as an automation for some university that still does not use modern technology, but as it seems, they *will* keep going with old stuff.
+It's a simple Python Flask application for a fee payment system. Was going to serve as an automation for a university.
 
-Others libraries used here are in [requirements.txt](/requirements.txt). The frontend only uses Bootstrap and some other JS libs like aos.js.
+Others libraries used here are in [requirements.txt](/requirements.txt). The frontend only uses vanilla HTML/CSS/JS and some libs like aos.js.
 
 The main language of the page is spanish.
 
-## Installation
+## It is useful?
+
+No, actually is not.
+
+As it is, the system would just pass the physical queues to pay fees to virtual ones. That's why I published it as an archive. I was going to add the actual automation of fee payments with cards, but as the university didn't care about the project... well.
+
+So, it's just here as a memory and as a project to show my code quality. (is regular, I would say)
+
+## Running
 
 Just clone the repository with `git clone https://github.com/Vz0n/PaymentAssistant`, instal dependencies with `pip install -r requirements.txt` and run `python run.py`.

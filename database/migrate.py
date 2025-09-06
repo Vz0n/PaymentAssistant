@@ -12,13 +12,12 @@ MIGRATION_SQL = [
     "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR(32) NOT NULL, fname VARCHAR(32), sname VARCHAR(32), password VARCHAR(64) NOT NULL, role TEXT CHECK(role IN ('user', 'admin')), send_notifications INTEGER, password_token VARCHAR(32), pending_fees TEXT)",
     "CREATE UNIQUE INDEX IF NOT EXISTS idx_email ON users (email)",
     "CREATE TABLE IF NOT EXISTS data (key TEXT, value INTEGER)",
-    "CREATE TABLE IF NOT EXISTS verif_pending_payments (id VARCHAR(16) PRIMARY KEY, user REFERENCES users(id), fee_number INTEGER, transaction_id INTEGER, ci INTEGER)",
+    "CREATE TABLE IF NOT EXISTS verif_pending_payments (id VARCHAR(24) PRIMARY KEY, user REFERENCES users(id), fee_number INTEGER, ci INTEGER, filename VARCHAR(45))",
     f"INSERT OR REPLACE INTO data VALUES ('schema_version', {schema_version})"
 ]
 
 SEED_SQL = [
-    f"INSERT INTO users VALUES (1, 'admin@example.com', 'John', 'Doe', '{sha256(random_passwd).digest().hex()}', 'admin', FALSE, NULL, json_array())",
-    "INSERT INTO data VALUES ('notification_next_payment_day', 1)"
+    f"INSERT INTO users VALUES (1, 'admin@example.com', 'John', 'Doe', '{sha256(random_passwd).digest().hex()}', 'admin', FALSE, NULL, json_array())"
 ]
 
 def check_migration():
@@ -29,7 +28,7 @@ def check_migration():
        # If the table does not exists, this will throw an error and
        # it will run the migrations.
        # TODO: Change this to something better
-       db_version = db.execute_query("SELECT value FROM data WHERE key='schema_version'")[0]
+       db_version = db.execute_query("SELECT value FROM data WHERE key='schema_version'")[0][0]
 
        if db_version < schema_version:
            app_logger.info("Updating database schema...")

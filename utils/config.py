@@ -10,8 +10,8 @@ app_url = "http://127.0.0.1:8000"
 bind = "127.0.0.1:8000"
 # Key used for signing cookies. Changing this will cause users to get logged out
 secret_key = "{urandom(24).hex()}"
-# Server environment
-environment = "production"
+# Server debug mode. Don't enable it in production.
+debug = false
 # Fee payment dates
 fee_dates = ["2025-01-20", "2025-02-20", "2025-04-20", "2025-05-20", "2025-06-20"]
 # Forward email for receipts

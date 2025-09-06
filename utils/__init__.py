@@ -16,3 +16,8 @@ def generate_token(length: int = 32):
         token.append(alphabet[rand])
 
     return "".join(token)
+
+def write_data_to_storage(data: bytes, filename: str):
+    with open(f"storage/{filename}", "wb") as f:
+        f.write(data)
+        f.close()

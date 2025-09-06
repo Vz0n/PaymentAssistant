@@ -6,31 +6,29 @@ from time import strftime, localtime
 from database import Database
 from logger import app_logger
 
-def update_users_slice(users_slice: list[any], fee: int, cursor):
-    for user in users_slice:
-        json: list[int] = loads(user[1])
+def update_users_slice(users_data_slice: list[any], fee: int, cursor):
+    for user_data in users_data_slice:
+        json: list[int] = loads(user_data[1])
         json.append(fee)
-        cursor.execute("UPDATE users SET pending_fees=json(?) WHERE id=?",  [dumps(json), user[0]])
+
+        cursor.execute("UPDATE users SET pending_fees = json(?) WHERE id = ?",  [dumps(json), user_data[0]])
 
 
 async def fee_task(dates: list[str]):
     db = Database()
-    result = db.execute_query("SELECT value FROM data WHERE key='payment_date'")
+    result = db.execute_query("SELECT value FROM data WHERE key = 'fee_date_index'")
     
-    if not len(result) > 0:
-        today_fee = None
-    else:
-        today_fee = result[0][0]
+    fee_index = None if len(result) < 1 else result[0][0]
 
     while True:
         await sleep(1)
 
         date = strftime("%Y-%m-%d", localtime())
 
-        if not today_fee:
+        if not fee_index:
             for i, fee_date in enumerate(dates):
               if fee_date == date:
-                  users = db.execute_query("SELECT id,pending_fees FROM users WHERE NOT role='admin'")
+                  users = db.execute_query("SELECT id,pending_fees FROM users WHERE NOT role = 'admin'")
                   users_size = len(users)
 
                   c = 32 if users_size > 32 else 1
@@ -50,14 +48,13 @@ async def fee_task(dates: list[str]):
                   cursor.close()
                   db.commit_changes()
                       
-                  today_fee = fee_date
-
-                  db.execute_update("INSERT INTO data VALUES ('payment_date', ?)", today_fee)
+                  fee_index = i + 1
+                  db.execute_update("INSERT INTO data VALUES ('fee_date_index', ?)", fee_index)
                   break
-        
-        if today_fee != date:
-            db.execute_update("DELETE FROM data WHERE key='payment_date'")
-            today_fee = None
+     
+        if fee_index is not None and dates[fee_index - 1] != date:
+            db.execute_update("DELETE FROM data WHERE key = 'fee_date_index'")
+            fee_index = None
                     
             
 def create_fee_updater_task(dates: list[str]):

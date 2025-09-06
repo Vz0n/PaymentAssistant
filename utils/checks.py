@@ -1,16 +1,20 @@
-from .mailer import Mailer
-
 import re
 
+from .mailer import Mailer
+
 def match_regex(string: str, regexp: str):
-    reg = re.compile(regexp, re.MULTILINE)
+    reg = re.compile(regexp)
 
     return reg.match(string)
 
-def find_matches(string: str, regexp: str):
-    reg = re.compile(regexp, re.MULTILINE)
+def get_valid_dates(dates: list[str]):
+    count = 0
 
-    return reg.findall(string)
+    for date in dates:
+        if match_regex(date, r"([0-9]{4}-[0-9]{2}-[0-9]{2})"):
+            count += 1
+
+    return count
 
 def check_mailer() -> int:
     mailer = Mailer()

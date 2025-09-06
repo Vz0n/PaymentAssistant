@@ -3,7 +3,7 @@
 # security reasons.
 import smtplib
 
-from email.message import EmailMessage
+from email.mime.text import MIMEText
 from ssl import create_default_context
 from os import environ
 from socket import gaierror
@@ -36,17 +36,25 @@ class Mailer:
         except smtplib.SMTPHeloError:
             app_logger.warning("Server didn't properly answer to the HELO command! Mailer may not work properly")
 
-    # Sends an email with the configured SMTP server.
-    # returns a status code, 1 means that the email was sent successfully.
-    def send_mail(self, message: EmailMessage) -> int:
-        if self.server == None: return 0
+    # Sends a email with text/html mimetype using the configured SMTP server.
+    def send_html_mail(self, text: str, fr: str, to: str, subject: str) -> bool:
+        if self.server == None: return False
+
+        message = MIMEText(text, "html")
+            
+        message.add_header("Subject", f"Asistencia de pagos - {subject}")
+        message.add_header("From", fr)
+        message.add_header("To", to)
 
         try:
             self.server.send_message(message)
-            return 1
-        except smtplib.SMTPException:
+
+            return True
+        except smtplib.SMTPException as err:
             app_logger.error(f"An error happened while sending email to {message.get("To")}!")
-            raise
+            app_logger.error(f"Error was: {err.strerror}")
+            
+            return False
 
     def end(self):
         if self.server == None: return

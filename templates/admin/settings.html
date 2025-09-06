@@ -3,7 +3,38 @@
 Ajustes de la web
 {% endblock %}
 
+{% set page_type = "form" %}
+
 {% block body %}
-admin settings
-<script src="/static/js/admin_dates.js"></script>
+<header class="form-header">
+    <h1>Ajustes de la página web</h1>
+    <span id="message"></span>
+</header>
+<form class="form" id="settings-form">
+    <main class="form-row">
+        <section>
+            <h3>Ajustes generales</h3>
+            <label class="form-label" for="email">Correo de recibos</label>
+            <input class="input-box" id="email" type="email" value="{{ data[0] }}" required>
+            <label class="form-label" for="fee_price">Precio de la cuota (USD)</label>
+            <input class="input-box" id="fee_price" type="number" value="{{ data[1] }}" required>
+        </section>
+        <section>
+            <h3>Fechas de pago de las cuotas</h3>
+            <label class="form-label" for="date-1">Cuota 1</label>
+            <input class="input-box" id="date-1" type="date" value="{{ data[2][0] }}" required>
+            <label class="form-label" for="date-2">Cuota 2</label>
+            <input class="input-box" id="date-2" type="date" value="{{ data[2][1] }}" required>
+            <label class="form-label" for="date-3">Cuota 3</label>
+            <input class="input-box" id="date-3" type="date" value="{{ data[2][2] }}" required>
+            <label class="form-label" for="date-4">Cuota 4</label>
+            <input class="input-box" id="date-4" type="date" value="{{ data[2][3] }}" required>
+            <label class="form-label" for="date-5">Cuota 5</label>
+            <input class="input-box" id="date-5" type="date" value="{{ data[2][4] }}" required>
+        </section>
+    </main>
+    <input name="csrf_token" value="{{ csrf_token() }}" hidden>
+    <button type="submit">Guardar cambios</button>
+</form>
+<script src="/static/js/admin_settings.js"></script>
 {% endblock %}

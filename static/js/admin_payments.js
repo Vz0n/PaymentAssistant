@@ -1,24 +1,26 @@
 const id = document.getElementById("payment_id").value;
-const csrf_token = document.getElementsByName("csrf_token")[0].value;
+const csrf_token = document.getElementById("csrf_token").value;
 
-var action = async (action) => {
+async function action(action) {
+    let reason = document.getElementById("reject-reason").value;
+
     let resp = await fetch(`/admin/payments/${action}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRFToken": csrf_token
         },
-        body: `payment_id=${id}`
+        body: `payment_id=${id}&reason=${reason}`
     });
     
-    let text = await resp.text()
+    let text = await resp.text();
 
-    if(resp.status != 303){
-        document.getElementsByClassName("message")[0].textContent = text
+    if(resp.status == 204){
+        window.location = "/admin/payments";
         return;
     }
-     
-    window.location = text;
+
+    document.getElementById("message").textContent = text;
 }
 
 // Add two listeners for the cancel and accept button.

@@ -12,6 +12,8 @@ const COLOR_ANIMATION = [
     }
 ]
 
+var is_blurried = false;
+
 async function transitionLabel(reverse, labelname){
     const match = document.querySelector(`label[for=${labelname}]`);
 
@@ -34,8 +36,21 @@ function setupLinks(){
     for(let link of links){ 
         let href = link.getAttribute("data-href");
 
-        link.addEventListener("click", (e) => window.location = `/${href}`);
+        link.addEventListener("click", (e) => {
+            if(href.startsWith("/")){
+                window.location = `${href}`;
+            } else {
+                window.location = `${window.location.href}${href}`;
+            }
+        });
     }
+}
+
+function blur_page(){
+    let element = document.querySelector("div[data-to-blurry]");
+
+    element.style.filter = !is_blurried ? "blur(4px)" : "";
+    is_blurried = !is_blurried;
 }
 
 function setupLabels(){
@@ -59,6 +74,11 @@ let form = document.getElementById("content-form")
 let dropdown_menu = document.getElementById("dropdown-menu");
 
 if(form != null) setupLabels();
+
+// Listen to popovers to blur the page
+for(node of document.querySelectorAll("button[popovertarget]")){
+    node.addEventListener("click", (ev) => blur_page());
+}
 
 
 

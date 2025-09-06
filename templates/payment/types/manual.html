@@ -4,6 +4,30 @@
 Pago manual
 {% endblock %}
 
-{% block head %}
-do manual payment
+{% set page_type = "form" %}
+
+{% block body %}
+<header class="form-header">
+    <h1>Enviar datos del pago</h1>
+    <p>
+        Rellene todos los campos y adjunte el comprobante del pago que hizo al instituto.
+        Un administrador revisará la información y posteriormente le enviaremos un correo para
+        hacerle saber si la misma fue aprobada o rechazada. 
+    </p>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+    <span class="{{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% endif %}
+</header>
+<form method="post" action="/payment/do/manual" class="form" enctype="multipart/form-data">
+    <label class="form-label" for="ci">Cédula de identidad</label>
+    <input name="ci" class="input-box" required> 
+    <label class="form-label" for="check_file">Comprobante del pago</label>
+    <input name="check_file" type="file" accept=".pdf,.png,.jpg" required>
+    <input name="fee_number" value="{{ fee_number }}" hidden>
+    <input name="csrf_token" value="{{ csrf_token() }}" hidden>
+    <button>Enviar información</button>
+    <div class="link-button" data-href="/payment/cancel">Cancelar</div>
+</form>
 {% endblock %}

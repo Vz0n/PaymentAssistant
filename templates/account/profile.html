@@ -5,7 +5,7 @@
 {% set page_type = "form" %}
 
 {% block body %}
-<header class="content-header">
+<header class="form-header">
     <h1>Perfil de usuario</h1>
     {% if messages|length > 0 %}
       {% for type,message in messages %}
@@ -17,17 +17,19 @@
 </header>
 <form class="form" method="POST">
     <label for="fname" class="form-label">Nombre</label>
-    <input name="fname" class="form-input" value="{{ data[0] }}" required>
+    <input name="fname" class="input-box" value="{{ data[0] }}" required>
     <label for="sname" class="form-label">Apellido</label>
-    <input name="sname" class="form-input" value="{{ data[1] }}" required>
+    <input name="sname" class="input-box" value="{{ data[1] }}" required>
     <label for="email" class="form-label">Correo</label>
-    <input name="email" type="email" class="form-input" value="{{ data[2] }}" disabled>
-    <label for="enable_notifications" class="form-label">Activar notificaciones</label>
-    {% if data[3] %}
-    <input name="enable_notifications" class="form-input" type="checkbox" checked>
-    {% else %}
-    <input name="enable_notifications" class="form-input" type="checkbox">
-    {% endif %}
+    <input name="email" type="email" class="input-box" value="{{ data[2] }}" disabled>
+    <div>
+      <label for="enable_notifications" class="form-label">Activar notificaciones</label>
+      {% if data[3] %}
+      <input name="enable_notifications" class="input-box" type="checkbox" checked>
+      {% else %}
+      <input name="enable_notifications" class="input-box" type="checkbox">
+      {% endif %}
+    </div>
     <input name="csrf_token" value="{{ csrf_token() }}" hidden>
     <button type="submit">Modificar perfil</button>
 </form>

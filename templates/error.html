@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block title %}
-Página no encontrada
+Error
 {% endblock %}
 
 {% set page_type = "text" %}
 
 {% block body %}
 <header class="text-header">
-    <h1>No encontrado.</h1>
+    <h1>Error</h1>
 </header>
 <div class="text-main">
-    <p>No se ha encontrado lo que estabas buscando.</p>
+    <p>{{ message }}</p>
     <div data-href="/" class="link-button">Ir a la página principal</div>
 </div>
 {% endblock %}

@@ -12,9 +12,6 @@ class Database:
         data = cursor.execute(stmt, params).fetchall()
 
         cursor.close()
-
-        if len(data) == 1:
-            return data[0]
         
         return data
 

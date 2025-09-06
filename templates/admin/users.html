@@ -3,6 +3,38 @@
 Usuarios
 {% endblock %}
 
+{% set page_type = "table" %}
+
 {% block body %}
-admin users view
+<header>
+    <h1>Lista de usuarios registrados</h1>
+</header>
+<table>
+    <thead>
+        <tr class="table-header">
+          <th>Correo</th>
+          <th>Primer nombre</th>
+          <th>Segundo nombre</th>
+          <th>Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<footer>
+    {% if users|length > 8 %}
+    <button class="link-button" data-href="users?page={{ page }}">Siguiente</a>
+    {% endif %}
+    {% if page != 1 %}
+    <button class="link-button" data-href="users?page={{ page - 1 }}">Anterior</a>
+    {% endif %}
+</footer>
 {% endblock %}

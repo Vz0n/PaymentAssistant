@@ -9,7 +9,7 @@ document.getElementById("settings-form").addEventListener('submit', async (ev) =
     for(let i = 1; i <= 5; i++){
         let date = document.getElementById(`date-${i}`).value;
 
-        i == 5 ? dates = dates.concat(date) : dates = dates.concat(`${date}|`);
+        dates = i == 5 ? dates.concat(date) : dates.concat(`${date}|`);
     }
 
     let resp = await fetch("settings/edit", {

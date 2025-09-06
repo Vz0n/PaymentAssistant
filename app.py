@@ -39,8 +39,10 @@ def not_allowed(_):
 
 @app.errorhandler(500)
 def generic_err(_):
-    return render_template("50x.html", message="Ha ocurrido un error extraño"), 500
+    return render_template("error.html", message="""Ha ocurrido un error interno al intentar cargar la página o procesar tus datos.
+    Si esto sigue ocurriendo, contacta a los administradores de la página."""), 500
 
 @app.errorhandler(CSRFError)
 def invalid_token_err(_):
-    return "Tu petición contiene un token CSRF inválido. Intenta enviarla de nuevo", 400
+    return render_template("error.html", 
+            message="Tu petición contiene un token de verificación expirado. Recarga la página."), 400

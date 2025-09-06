@@ -3,6 +3,19 @@
 Pago realizado
 {% endblock %}
 
-{% block head %}
-payment done
+{% set page_type = "text" %}
+
+{% block body %}
+<header class="text-header">
+    <h1>Pago completado</h1>
+</header>
+<main class="text-main">
+    <div class="column-container" style="width: 50%;">
+      <p>
+        Hemos recibido la información. Si hiciste un pago manual, 
+        cuando un administrador la revise te lo haremos saber por correo.
+      </p>
+      <a class="link link-button" href="/">Volver a la página principal</a>
+    </div>
+</main>
 {% endblock %}

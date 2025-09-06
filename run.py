@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from tasks import create_notification_task, create_fee_updater_task
 from database.migrate import check_migration
 
+from os import mkdir
+from os.path import exists
 from logger import app_logger
 from utils import Config, set_app_config
 from app import app
@@ -23,6 +25,10 @@ if not load_dotenv():
 # Do migrations if there are needed for the database
 check_migration()
 
+# Create the storage directory is does not exists
+if not exists("storage/"):
+    mkdir("storage")
+
 # Start the email notifications thread
 app_logger.info("Starting email task...")
 emails_thread = Thread(target=create_notification_task, name="emails-thread", 
@@ -39,5 +45,5 @@ set_app_config(config, app)
 
 if __name__ == "__main__":
     address, port = config.get("bind").split(":")
-    app.run(address, port, debug=config.get("environment") == "development")
+    app.run(address, port, debug=config.get("debug"))
 

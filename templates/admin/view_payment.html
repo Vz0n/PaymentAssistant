@@ -3,6 +3,42 @@
 Ver pago
 {% endblock %}
 
+{% set page_type = "text"%}
+
 {% block body %}
-admin view payment
+<header class="text-header">
+    <h1>Información del pago</h1>
+    <span class="error-message" id="message"></span>
+</header>
+<dialog popover="manual" id="reason-dialog" class="dialog">
+    <div class="column-container" style="padding: 10px;">
+        <span id="enter-reason-text">
+            Introduzca la razón por la cual está rechazando el pago.
+        </span>
+        <textarea id="reject-reason" placeholder="Razón..." required></textarea>
+        <button popovertarget="reason-dialog" id="reject">Aceptar y rechazar</button>
+        <button popovertarget="reason-dialog">Cancelar</button>
+    </div>
+</dialog>
+<main class="text-main">
+    <section class="column-container">
+        <ul class="list">
+          <li>Usuario: {{ user_fname }} {{ user_sname }}</li>
+          <li>Cédula de identidad: {{ payment_data[0] }}</li>
+          <li>Cuota a cancelar: {{ payment_data[1] }}</li>
+        </ul>
+        <a target="_blank" class="link link-button" href="/admin/storage/{{ payment_data[2] }}">
+            Descargar comprobante
+        </a>
+        <div class="row-container">
+            <button id="accept">Aceptar</button>
+            <!-- simple spacer -->
+            <div style="width: 25%;"></div>
+            <button popovertarget="reason-dialog">Rechazar</button>
+        </div>
+    </section>
+</main>
+<input id="payment_id" value="{{ id }}" hidden>
+<input id="csrf_token" value="{{ csrf_token() }}" hidden>
+<script src="/static/js/admin_payments.js"></script>
 {% endblock %}

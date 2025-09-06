@@ -8,12 +8,45 @@ Hacer el pago
 {% block body %}
 <header class="text-header">
     <h1>Hacer el pago de la cuota</h1>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+        <span class="{{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% endif %}
 </header>
 <main class="text-main">
     <p>Para proceder con el pago de la cuota, 
        primero debe seleccionar un método de pago de los listados a continucación. Luego podrá
        darle al botón "Siguiente" para proceder.
+       {% if exchange_rate %}
+       <b class="b-info">El costo de la cuota es de {{ fee_price }} Bs. (Tasa de cambio: {{ exchange_rate }})</b>
+       {% else %}
+       <b class="b-info">El costo de la cuota es de {{ fee_price }} USD.</b>
+       {% endif %}
     </p>
-    <b class="box-warning">Tasa del dolar: {{ exchange_rate }} Bs.</b>
 </main>
+{% if user_fees|length > 0 %}
+<form method="post" action="/payment/init" class="column-form">
+    <div class="column-container">
+        <label for="method">Método de pago</label>
+        <select name="method">
+          <option value="manual">Manual (por verificación)</option>
+        </select>
+    </div>
+    <div class="column-container">
+        <label for="method">Número de cuota</label>
+        <select name="fee_number">
+        {% for fee in user_fees %}
+          <option value="{{ fee }}">{{ fee }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <input hidden name="csrf_token" value="{{ csrf_token() }}">
+    <button>Siguiente</button>
+</form>
+{% else %}
+<p style="width: max-content;">
+  Por ahora, no tienes ninguna cuota que cancelar. Vuelve cuando tengas una pendiente.
+</p>
+{% endif %}
 {% endblock %}

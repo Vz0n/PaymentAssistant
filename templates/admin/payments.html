@@ -3,6 +3,45 @@
 Pagos por verificar
 {% endblock %}
 
+{% set page_type = "table" %}
+
 {% block body %}
-pagos por verificar
+<header>
+    <h1>Lista de pagos manuales realizados</h1>
+    <span>Haz click en la ID de un pago para poder ver sus detalles</span>
+</header>
+<table>
+    <thead>
+        <tr class="table-header">
+          <th>ID del pago</th>
+          <th>ID del usuario</th>
+          <th>Cédula</th>
+          <th>Número de cuota</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+          <tr>
+              <td>
+                <a href="payments/view/{{ payment[0] }}" class="link">{{ payment[0] }}</a>
+              </td>
+              <td>{{ payment[1] }}</td>
+              <td>{{ payment[2] }}</td>
+              <td>{{ payment[3] }}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<footer>
+    {% if payments|length == 0 %}
+       <span>No hay pagos para mostrar, por ahora.</span>      
+    {% else %}
+      {% if payments|length > 8 %}
+       <button class="link-button" data-href="payments?page={{ page }}">Siguiente</a>
+      {% endif %}
+      {% if page != 1 %}
+       <button class="link-button" data-href="payments?page={{ page - 1 }}">Anterior</a>
+      {% endif %}
+    {% endif %}
+</footer>
 {% endblock %}

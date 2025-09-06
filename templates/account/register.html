@@ -5,7 +5,7 @@
 {% set page_type = "form" %}
 
 {% block body %}
-<header class="content-header">
+<header class="form-header">
     <h1>Registro de estudiantes</h1>
     {% if messages|length > 0 %}
       {% for type,message in messages %}
@@ -17,13 +17,13 @@
 </header>
 <form class="form" method="POST">
     <label for="email" class="form-label">Correo</label>
-    <input name="email" type="email" class="form-input" required>
+    <input name="email" type="email" class="input-box" required>
     <label for="password" class="form-label">Contraseña</label>
-    <input name="password" type="password" class="form-input" required> 
+    <input name="password" type="password" class="input-box" required> 
     <label for="fname" class="form-label">Nombre</label>
-    <input name="fname" class="form-input" required>
+    <input name="fname" class="input-box" required>
     <label for="sname" class="form-label">Apellido</label>
-    <input name="sname" class="form-input" required>
+    <input name="sname" class="input-box" required>
     <input name="csrf_token" value="{{ csrf_token() }}" hidden>
     <button type="submit">Registrarse</button>
 </form>

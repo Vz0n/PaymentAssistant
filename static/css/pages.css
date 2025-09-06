@@ -6,7 +6,7 @@
                  "header header header" 100px
                  "content  content  content" max-content
                  "content  content  content" max-content;
-    column-gap: 25%;
+    row-gap: 5%;
 
     .text-header {
         grid-area: header;
@@ -17,16 +17,12 @@
         grid-area: content;
         display: flex;
         justify-content: center;
-        gap: 15%;
-    }
-
-    .link-button {
-        justify-self: end;
+        gap: 10%;
     }
 }
 
 #content-form {
-    .content-header {
+    .form-header {
         text-align: center;
         margin-bottom: 30px;
         width: fit-content;
@@ -37,6 +33,15 @@
     .form {
         margin: auto;
         width: min-content;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
         padding: 24px;
     }
 
@@ -45,16 +50,46 @@
         position: relative;
     }
 
-    .form-input {
-        display: block;
+    input, button {
         margin-bottom: 20px;
+    }
+
+    .input-box {
+        display: block;
         border: solid 2px;
         border-color: var(--buttons-color);
         transition: border-color 100ms;
     }
 
-    .form-input:focus {
+    .input-box:focus {
         outline: none;
         border-color: var(--hover-color)
+    }
+}
+
+#content-table {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding-top: 20px;
+
+    table {
+        margin: 4px 32px;
+        background-color: var(--primary-color);
+        border-radius: 4px;
+
+        thead {
+            background-color: var(--hover-color);
+        }
+
+        th, td {
+            padding: 15px;
+        }
+    }
+
+    footer button {
+        margin: 5px;
     }
 }

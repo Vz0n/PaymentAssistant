@@ -8,9 +8,10 @@
       <a href="/admin" class="link">Administración</a>
     {% endif %}
       <menu id="dropdown-menu">
-        <span class="dropdown-menu-span">{{ get_session_data("fname") }} {{ get_session_data("sname") }}</span>
+        <span class="dropdown-menu-span">Usuario</span>
         <div class="dropdown-links">
             <a href="/account/profile" class="link">Perfil</a>
+            <a href="/account/change_password" class="link">Cambiar contraseña</a>
             <a href="/account/logout" class="link">Cerrar sesión</a>
         </div>
       </menu>

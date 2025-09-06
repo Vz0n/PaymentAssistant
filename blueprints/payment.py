@@ -4,12 +4,8 @@ from flask import current_app as app
 from puremagic import from_string, PureError
 from json import loads
 from database import Database
-from utils import generate_token, Mailer, match_regex
+from utils import generate_token, match_regex, write_data_to_storage
 
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
-from email.mime.image import MIMEImage
 from math import ceil
 
 import requests
@@ -18,160 +14,125 @@ payment = Blueprint("payment", __name__)
 
 # A mapping for the payment method and it's type name
 METHODS = {
-    "manual": "manual",
-    "mercantil": "card",
+    "manual": "manual"
 }
 
 @payment.before_request
 def before():
-    if "role" not in session:
+    if "id" not in session:
         return redirect("/account/login", 303)
+
+    # We won't allow requests sent from a client like cURL to those endpoints
+    if request.path.startswith("/do/") and not session.get("payment_id", None):
+        return redirect("/payment", 302)
 
 @payment.get("/")
 def index():
     db = Database()
-    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session["id"])[0]
+    pending_fees = db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session["id"])[0][0]
     db.close()
+
+    ctx = {"user_fees": loads(pending_fees), "messages": get_flashed_messages(True)}
+    config_price = app.assistant_config.get("fee_price")
 
     try:
         # We use the pydolarve API to get the dolar exchange rate
         json = requests.get("https://pydolarve.org/api/v1/dollar?page=bcv", timeout=5).json()
         exchange_rate = float(json["monitors"]["usd"]["price"])
 
-        bs_price = ceil(float(app.assistant_config.get("fee_price")) * exchange_rate)
-
-        return render_template("payment/index.html", fee_price=bs_price, 
-                 user_fees=loads(pending_fees), exchange_rate=exchange_rate)
+        bs_price = ceil(float(config_price) * exchange_rate)
+        ctx["fee_price"] = bs_price
+        ctx["exchange_rate"] = exchange_rate
     except:
-        return render_template("payment/index.html", 
-                 user_fees=loads(pending_fees), fee_price=app.assistant_config.get("fee_price"))
+        ctx["fee_price"] = config_price
+
+    return render_template("payment/index.html", **ctx)
 
 @payment.post("/init")
 def init():
     method = request.form.get("method", "")
     fee_number = request.form.get("fee_number", "")
     db = Database()
+    message = None
 
-    pending_fees = loads(db.execute_query("SELECT pending_fees FROM users WHERE id = ?", session.get("id"))[0])
     sent_manual = db.execute_query("SELECT id FROM verif_pending_payments WHERE user = ?", session.get("id"))
     db.close()
 
-    if not match_regex(fee_number, r"[0-9]") or not match_regex(method, r"[a-z]"):
-        flash("Introduce un método de pago y cuota válida.")
-        return redirect("error", 302)
-    
-    if int(fee_number) not in pending_fees:
-        flash("Has introducido una cuota que no debes.")
-        return redirect("error", 302)
+    if not match_regex(fee_number, r"^[0-9]{1,2}$"):
+        message = ("Número de cuota inválido.", "error")
     
     if len(sent_manual) > 0:
-        flash("Tienes un pago pendiente por verificar. No puedes interactuar con esta sección hasta que se verifique tu pago.")
-        return redirect("error", 302)
+        message = ("Tienes un pago pendiente por verificar. No podrás interactuar con esta sección hasta que se verifique tu pago.", "error")
 
     ptype = METHODS.get(method, "manual")
 
     if not ptype:
-        flash("Has introducido un método de pago desconocido.")
-        return render_template("error", 302)
+        message = ("Método de pago desconocido.", "error")
     
-    session["payment_info"] = [ptype, fee_number]
-    return render_template(f"payment/types/{ptype}.html", method=method.capitalize(), type=ptype)       
-
-# This is where you should implement the automatic payment processing logic for bank's card payment.
-@payment.post("/do/card")
-def mercantil():
-    payment_info = session.get("payment_info")
-
-    if not payment_info: return redirect("/payment", 302)
-
-    payment_info.append("done")
-    session["payment_info"] = payment_info
+    if message:
+        flash(*message)
+        return redirect("/payment", 302)
     
-    return redirect("/payment/success", 303)
+    # Token to ensure that the payment endpoints will be accesed from the website
+    # and to give the payment an unique identification 
+    session["payment_id"] = generate_token(24)
+
+    return render_template(f"payment/types/{ptype}.html", method=method.capitalize(), 
+                           fee_number=fee_number)
 
 @payment.post("/do/manual")
 def manual():
-    sid = session.get("id")
-    payment_info = session.get("payment_info")
-
-    if not payment_info: return redirect("/payment", 302)
-
+    user_id = session.get("id")
+    
+    fee_number = request.form.get("fee_number", "")
     ci = request.form.get("ci", "")
-    payment_id = request.form.get("payment_id", "")
     attachment = request.files.get("check_file", "")
-    error = False
 
-    if ci == "" or payment_id == "":
-        flash("Debes rellenar todos los campos")
-        error = True
+    if not match_regex(fee_number, r"^[0-9]{1,2}$"):
+        flash("Número de cuota inválido", "error")
 
-    if len(ci) > 8 or not match_regex(ci, r"[0-9]{6,7}"):
-        flash("Introduce una cédula de identidad válida.")
-        error = True
+    if not match_regex(ci, r"^[0-9]{7,8}$"):
+        flash("Introduce una cédula de identidad válida.", "error")
 
     try:
+        if attachment == "": raise PureError
+
         raw_data = attachment.stream.read()
         mimetype = from_string(raw_data, mime=True)
 
-        if mimetype.find("pdf") == -1 and mimetype.find("image") == -1:
+        if mimetype != "application/pdf" and mimetype.find("image") == -1:
             raise PureError
-
+        
+        extension = from_string(raw_data)
     except PureError:
-        flash("Debes subir una imagen o archivo PDF válido.")
-        error = True
+        flash("Debes subir una imagen o archivo PDF válido.", "error")
 
-    mailer = Mailer()
+    messages = get_flashed_messages(True)
 
-    if mailer.server == None:
-        flash("Parece que la aplicación no puede enviar correos. Contacte a un administrador para obtener ayuda.")
-        error = True
-
-    if error:
-        return redirect("/payment/error", 302)
+    if len(messages) > 0:
+        return render_template("payment/types/manual.html", 
+                               messages=messages, fee_number=fee_number)
     
-    text = MIMEText(render_template("email/forward.html", ci=ci, email=session.get("email"), 
-                    pid=payment_id, fname=session.get("fname"), lname=session.get("sname"), 
-                    fee_number=payment_info[1]), "html")
+    payment_id = session.pop("payment_id")
+    filename = f"payment_{payment_id}{extension}"
 
-    if mimetype == "application/pdf":
-        email_attachment = MIMEApplication(raw_data, "pdf")
-    else:
-        email_attachment = MIMEImage(raw_data)
-
-    email = MIMEMultipart(_subparts=[text, email_attachment])
-    email.add_header("Subject", f"Recibo de pago para la cuota {payment_info[1]} por parte de C.I {ci}")
-    email.add_header("From", app.config["FROM_EMAIL"])
-    email.add_header("To", app.assistant_config.get("forward_email"))
-
-    mailer.send_mail(email)
+    # Move the uploaded file to the storage
+    write_data_to_storage(raw_data, filename)
 
     db = Database()
-    db.execute_update("INSERT INTO verif_pending_payments VALUES (?, ?, ?, ?, ?)", generate_token(16), 
-                      sid, payment_info[1], payment_id, ci)
+    db.execute_update("INSERT INTO verif_pending_payments VALUES (?, ?, ?, ?, ?)", payment_id, 
+                      user_id, fee_number, ci, filename)
     db.close()
-
-    payment_info.append("done")
-    session["payment_info"] = payment_info
 
     return redirect("/payment/success", 303)
 
 @payment.route("/cancel")
 def cancel():
-    session.pop("payment_info")
+    # Remove the token
+    session.pop("payment_id")
 
     return redirect("/payment", 301)
 
 @payment.route("/success")
 def success():
-    payment_info: list[str] = session.get("payment_info", [])
-
-    if len(payment_info) < 3:
-        return redirect("/payment/", 302)
-
-    session.pop("payment_info")
-
-    return render_template("payment/success.html", method=payment_info[0])
-
-@payment.route("/error")
-def error():
-    return render_template("payment/error.html", messages=get_flashed_messages())
+    return render_template("payment/success.html")
