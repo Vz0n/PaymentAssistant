@@ -25,7 +25,7 @@ if not load_dotenv():
 # Do migrations if there are needed for the database
 check_migration()
 
-# Create the storage directory is does not exists
+# Create the storage directory if does not exists
 if not exists("storage/"):
     mkdir("storage")
 
