@@ -18,7 +18,7 @@ No, actually is not.
 
 As it is, the system would just pass the physical queues to pay fees to virtual ones. That's why I published it as an archive. I was going to add the actual automation of fee payments with cards, but as the university didn't care about the project... well.
 
-So; it's just here as a memory and project to show my code quality. (is regular, I would say)
+So; it's just here as a memory and project to show my code quality. Also I made various fixes and tweaks because the original code was pretty bad, as you can see in the commits.
 
 ## Running
 
