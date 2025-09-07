@@ -1,7 +1,7 @@
 {% set role = get_session_data("role") %}
 <nav class="navbar">
     <a href="/">Página principal</a>
-    <div class="navbar-elements">
+    <div class="user-buttons">
     {% if role != "" %}
       <a href="/payment">Cuotas</a>
     {% if role == "admin" %}
@@ -10,9 +10,9 @@
       <menu id="dropdown-menu">
         <span class="dropdown-menu-span">Usuario</span>
         <div class="dropdown-links">
-            <div class="link-button" data-href="/account/profile">Perfil</div>
-            <div class="link-button" data-href="/account/change_password">Cambiar contraseña</div>
-            <div class="link-button" data-href="/account/logout">Cerrar sesión</div>
+            <a class="link-button" href="/account/profile">Perfil</a>
+            <a class="link-button" href="/account/change_password">Cambiar contraseña</a>
+            <a class="link-button" href="/account/logout">Cerrar sesión</a>
         </div>
       </menu>
     {% else %}

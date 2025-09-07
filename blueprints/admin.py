@@ -49,7 +49,7 @@ def payments():
      db.close()
 
      return render_template("admin/payments.html", payments=pending_payments, page=page + 1,
-                            message=get_flashed_messages())
+                            messages=get_flashed_messages(True))
 
 @admin.get("/payments/view/<payment_id>")
 def view_payment(payment_id: str):
@@ -89,22 +89,22 @@ def set_payment(action: str):
           db.close()
           return "El pago al que haces referencia no existe.", 400
 
-     user_data = db.execute_query("SELECT pending_fees,fname,sname,email FROM users WHERE id = ?", 
-                                  payment_data[0][0])
+     user_id = payment_data[0][0]
+     user_data = db.execute_query("SELECT pending_fees,fname,sname,email FROM users WHERE id = ?", user_id)
     
      if action == "accept": 
         fees: list[int] = loads(user_data[0][0])
         fees.remove(payment_data[0][1])
-        db.execute_update("UPDATE users SET pending_fees = json(?)", dumps(fees))
+        db.execute_update("UPDATE users SET pending_fees = json(?) WHERE id = ?", dumps(fees), user_id)
 
         mail_subject = "Pago aceptado"
-        flash("El pago ha sido marcado como aceptado.")
+        flash("El pago ha sido marcado como aceptado.", "success")
      elif action == "reject":
         if reason == "":
              return "Debes dar una razón por la cual el pago está siendo rechazado.", 400
         
         mail_subject = "Pago rechazado"
-        flash("El pago ha sido marcado como rechazado.")
+        flash("El pago ha sido marcado como rechazado.", "success")
      else:
         db.close()
         return "Acción inválida.", 400

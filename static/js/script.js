@@ -33,16 +33,19 @@ async function transitionLabel(reverse, labelname){
 function setupLinks(){
     var links = document.getElementsByClassName("link-button");
 
-    for(let link of links){ 
-        let href = link.getAttribute("data-href");
+    for(let link of links){
+        // Ignore hyperlinks  
+        if(link.nodeName != "A"){
+            let href = link.getAttribute("data-href");
 
-        link.addEventListener("click", (e) => {
+          link.addEventListener("click", (e) => {
             if(href.startsWith("/")){
                 window.location = `${href}`;
             } else {
                 window.location = `${window.location.href}${href}`;
             }
-        });
+          });
+        }
     }
 }
 
@@ -80,5 +83,10 @@ for(node of document.querySelectorAll("button[popovertarget]")){
     node.addEventListener("click", (ev) => blur_page());
 }
 
+// Random background images
+let img_element = document.getElementById("background-img");
+let background_n = (Math.floor((Math.random() * 5)) % 3) + 1
+
+img_element.style.backgroundImage = `url('/static/img/${background_n}.jpg')`
 
 

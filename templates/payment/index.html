@@ -10,7 +10,7 @@ Hacer el pago
     <h1>Hacer el pago de la cuota</h1>
     {% if messages|length > 0 %}
       {% for type,message in messages %}
-        <span class="{{ type }}-message">{{ message }}</span>
+        <span class="block {{ type }}-message">{{ message }}</span>
       {% endfor %}
     {% endif %}
 </header>
@@ -45,8 +45,8 @@ Hacer el pago
     <button>Siguiente</button>
 </form>
 {% else %}
-<p style="width: max-content;">
+<span style="width: 47vw;">
   Por ahora, no tienes ninguna cuota que cancelar. Vuelve cuando tengas una pendiente.
-</p>
+</span>
 {% endif %}
 {% endblock %}

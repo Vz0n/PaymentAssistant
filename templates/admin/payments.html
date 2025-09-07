@@ -9,6 +9,11 @@ Pagos por verificar
 <header>
     <h1>Lista de pagos manuales realizados</h1>
     <span>Haz click en la ID de un pago para poder ver sus detalles</span>
+    {% if messages|length > 0 %}
+      {% for type,message in messages %}
+        <span class="block {{ type }}-message">{{ message }}</span>
+      {% endfor %}
+    {% endif %}
 </header>
 <table>
     <thead>
