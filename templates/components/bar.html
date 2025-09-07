@@ -3,21 +3,21 @@
     <a href="/">Página principal</a>
     <div class="navbar-elements">
     {% if role != "" %}
-      <a href="/payment" class="link">Cuotas</a>
+      <a href="/payment">Cuotas</a>
     {% if role == "admin" %}
-      <a href="/admin" class="link">Administración</a>
+      <a href="/admin">Administración</a>
     {% endif %}
       <menu id="dropdown-menu">
         <span class="dropdown-menu-span">Usuario</span>
         <div class="dropdown-links">
-            <a href="/account/profile" class="link">Perfil</a>
-            <a href="/account/change_password" class="link">Cambiar contraseña</a>
-            <a href="/account/logout" class="link">Cerrar sesión</a>
+            <div class="link-button" data-href="/account/profile">Perfil</div>
+            <div class="link-button" data-href="/account/change_password">Cambiar contraseña</div>
+            <div class="link-button" data-href="/account/logout">Cerrar sesión</div>
         </div>
       </menu>
     {% else %}
-      <a href="/account/login" class="link">Iniciar sesión</a>
-      <a href="/account/register" class="link">Registrarse</a>
+      <a href="/account/login">Iniciar sesión</a>
+      <a href="/account/register">Registrarse</a>
     {% endif %}
     </div>
 </nav>

@@ -23,7 +23,7 @@ Pagos por verificar
         {% for payment in payments %}
           <tr>
               <td>
-                <a href="payments/view/{{ payment[0] }}" class="link">{{ payment[0] }}</a>
+                <a href="payments/view/{{ payment[0] }}">{{ payment[0] }}</a>
               </td>
               <td>{{ payment[1] }}</td>
               <td>{{ payment[2] }}</td>
@@ -37,10 +37,10 @@ Pagos por verificar
        <span>No hay pagos para mostrar, por ahora.</span>      
     {% else %}
       {% if payments|length > 8 %}
-       <button class="link-button" data-href="payments?page={{ page }}">Siguiente</a>
+       <a href="payments?page={{ page }}">Siguiente</a>
       {% endif %}
       {% if page != 1 %}
-       <button class="link-button" data-href="payments?page={{ page - 1 }}">Anterior</a>
+       <a href="payments?page={{ page - 1 }}">Anterior</a>
       {% endif %}
     {% endif %}
 </footer>

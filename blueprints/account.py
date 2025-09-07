@@ -78,7 +78,7 @@ def register():
             flash("Ya existe un usuario registrado con ese correo.", "error")
             return redirect("register", 303)
 
-        db.execute_update("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, 'user', TRUE, NULL, json_array())", email, fname, sname, passwd_hash)
+        db.execute_update("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, 'user', TRUE, json_array())", email, fname, sname, passwd_hash)
         db.close()
         
         flash("Registro completado exitosamente. Ahora inicia sesión", "success")
@@ -111,7 +111,7 @@ def forgot():
                 return redirect("forgot", 303)
             
             # TODO: Set an expiry time for the token, as this can leverage vulnerabilities.
-            db.execute_update("UPDATE users SET password_token = ? WHERE id = ?", token, result[0][0])
+            db.execute_update("REPLACE INTO password_reset_tokens (user, token) VALUES (?, ?)", result[0][0], token)
         
         db.close()
         flash("Hemos enviado un correo de recuperación a la cuenta, en caso de existir.", "success")
@@ -127,7 +127,7 @@ def reset_password(token: str):
         if not match_regex(token, r"^[a-zA-Z0-9]{32}$"):
             raise ValueError
 
-        result = db.execute_query("SELECT id FROM users WHERE password_token = ?", token)
+        result = db.execute_query("SELECT user FROM password_reset_tokens WHERE token = ?", token)
 
         if len(result) == 0:
             raise ValueError
@@ -147,7 +147,9 @@ def reset_password(token: str):
             
             if not message:
                 passwd_hash = sha256(passwd.encode()).digest().hex()
-                db.execute_update("UPDATE users SET password = ?, password_token = NULL WHERE id = ?", passwd_hash, user)
+
+                db.execute_update("UPDATE users SET password = ? WHERE id = ?", passwd_hash, user)
+                db.execute_update("DELETE FROM password_reset_tokens WHERE user = ?", user)
 
                 flash("Contraseña reiniciada exitósamente.", "success")
                 return redirect("/account/login", 301)
@@ -215,10 +217,10 @@ def profile():
 
         flash(*message)
 
-    user_data = db.execute_query("SELECT fname,sname,email,send_notifications FROM users WHERE id = ?", sid)[0]
+    user_data = db.execute_query("SELECT fname,sname,email,send_notifications FROM users WHERE id = ?", sid)
     db.close()
 
-    return render_template("account/profile.html", data=user_data, messages=get_flashed_messages(True)) 
+    return render_template("account/profile.html", data=user_data[0], messages=get_flashed_messages(True)) 
 
 @account.get("/logout")
 def logout():

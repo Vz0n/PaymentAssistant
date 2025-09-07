@@ -9,15 +9,16 @@ schema_version = 2
 
 # Sequence of SQL statements
 MIGRATION_SQL = [
-    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR(32) NOT NULL, fname VARCHAR(32), sname VARCHAR(32), password VARCHAR(64) NOT NULL, role TEXT CHECK(role IN ('user', 'admin')), send_notifications INTEGER, password_token VARCHAR(32), pending_fees TEXT)",
+    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR(32) NOT NULL, fname VARCHAR(32), sname VARCHAR(32), password VARCHAR(64) NOT NULL, role TEXT CHECK(role IN ('user', 'admin')), send_notifications INTEGER, pending_fees TEXT)",
     "CREATE UNIQUE INDEX IF NOT EXISTS idx_email ON users (email)",
     "CREATE TABLE IF NOT EXISTS data (key TEXT, value INTEGER)",
+    "CREATE TABLE IF NOT EXISTS password_reset_tokens (user REFERENCES users(id), token VARCHAR(32) NOT NULL, creation INTEGER NOT NULL DEFAULT (unixepoch()))",
     "CREATE TABLE IF NOT EXISTS verif_pending_payments (id VARCHAR(24) PRIMARY KEY, user REFERENCES users(id), fee_number INTEGER, ci INTEGER, filename VARCHAR(45))",
     f"INSERT OR REPLACE INTO data VALUES ('schema_version', {schema_version})"
 ]
 
 SEED_SQL = [
-    f"INSERT INTO users VALUES (1, 'admin@example.com', 'John', 'Doe', '{sha256(random_passwd).digest().hex()}', 'admin', FALSE, NULL, json_array())"
+    f"INSERT INTO users VALUES (1, 'admin@example.com', 'John', 'Doe', '{sha256(random_passwd).digest().hex()}', 'admin', FALSE, json_array())"
 ]
 
 def check_migration():

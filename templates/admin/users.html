@@ -31,10 +31,10 @@ Usuarios
 </table>
 <footer>
     {% if users|length > 8 %}
-    <button class="link-button" data-href="users?page={{ page }}">Siguiente</a>
+    <a href="users?page={{ page }}">Siguiente</a>
     {% endif %}
     {% if page != 1 %}
-    <button class="link-button" data-href="users?page={{ page - 1 }}">Anterior</a>
+    <a href="users?page={{ page - 1 }}">Anterior</a>
     {% endif %}
 </footer>
 {% endblock %}

@@ -142,12 +142,8 @@ def settings():
 @admin.post("/settings/edit")
 def settings_edit():
      new_dates = request.form.get("dates", "").split("|")
-     new_email = request.form.get("receipt_email", "")
      new_price = request.form.get("fee_price", "")
      message = None
-
-     if not match_regex(new_email, r"\w+@\w+(?:\.\w+)+$"):
-            message = ("Introduce un email válido.", 400)
 
      if get_valid_dates(new_dates) != 5:
             message = ("Introduce fechas válidas para el pago de las cuotas.", 400)
@@ -160,7 +156,6 @@ def settings_edit():
             # we just allow the user to edit these values from the webserver
             values = {
                  "fee_dates": new_dates,
-                 "forward_email": new_email,
                  "fee_price": new_price
             }
 

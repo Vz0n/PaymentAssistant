@@ -2,7 +2,6 @@ document.getElementById("settings-form").addEventListener('submit', async (ev) =
     ev.preventDefault();
     
     let dates = ""
-    let email = document.getElementById("email").value;
     let price = document.getElementById("fee_price").value;
     let csrf_token = document.getElementsByName("csrf_token")[0].value;
 
@@ -18,7 +17,7 @@ document.getElementById("settings-form").addEventListener('submit', async (ev) =
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-CSRFToken': csrf_token
         },
-        body: `dates=${dates}&receipt_email=${email}&fee_price=${price}`
+        body: `dates=${dates}&fee_price=${price}`
     });
     let text = await resp.text();
 

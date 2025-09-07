@@ -14,8 +14,6 @@ secret_key = "{urandom(24).hex()}"
 debug = false
 # Fee payment dates
 fee_dates = ["2025-01-20", "2025-02-20", "2025-04-20", "2025-05-20", "2025-06-20"]
-# Forward email for receipts
-forward_email = "payments@example.com"
 # Fees price
 fee_price = "96"
 """

@@ -28,6 +28,7 @@ async def notification_task(dates: list[str], payment_url: str):
 
     while True:
         await sleep(1)
+        
         curr_date = strftime("%Y-%m-%d")
     
         if not fee_index:
@@ -55,7 +56,7 @@ async def notification_task(dates: list[str], payment_url: str):
               pool.shutdown(wait=True)
 
               fee_index = i + 1
-              db.execute_update(f"UPDATE data SET value = {fee_index} WHERE key = 'notification_fee_date_index'")
+              db.execute_update(f"INSERT INTO data VALUES ('notification_fee_date_index', {fee_index})")
         
         if fee_index is not None and dates[fee_index - 1] != curr_date:
             db.execute_update(f"DELETE FROM data WHERE key = 'notification_fee_date_index'")

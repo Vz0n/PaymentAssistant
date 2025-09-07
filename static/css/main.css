@@ -6,6 +6,7 @@
     --primary-color: #260650;
     --buttons-color: rgba(28, 7, 85, 0.9);
     --secondary-color: rgb(105, 105, 105);
+    --tables-background: rgba(170, 73, 239, 0.522);
     --hover-color: #178a7c;
     --shadow: #12024b;
 }
@@ -30,6 +31,20 @@ select:hover {
     background-color: #178a7c;
 }
 
+a {
+    text-decoration: none;
+    color: var(--buttons-color);
+    transition: color 200ms;
+
+    &:hover {
+        color: var(--hover-color);
+    }
+}
+
+.block {
+    display: block;
+}
+
 .error-message {
     color: rgb(201, 37, 37);
 }
@@ -43,12 +58,9 @@ select:hover {
     display: block;
 }
 
-button, .link-button, .link {
+button, .link-button {
     display: inline-block;
     transition: 500ms scale, 200ms box-shadow;
-}
-
-button, .link-button {
     background-color: var(--buttons-color);
     padding: 13px;
     text-align: center;
@@ -68,12 +80,7 @@ button, .link-button {
     flex-direction: row;
 }
 
-.link {
-    text-decoration: none;
-    color: black;
-}
-
-.link:hover, .link-button:hover, button:hover {
+.link-button:hover, button:hover {
     scale: 1.03;
     box-shadow: 1px 1px 15px var(--primary-color);
 }
@@ -89,7 +96,7 @@ button, .link-button {
     filter: blur(4px);
 }
 
-.paragraph {
+.paragraph-with-breaks {
     white-space-collapse: preserve-breaks;
 }
 
@@ -100,16 +107,15 @@ button, .link-button {
 
     .dropdown-links {
         position: absolute;
+        right: 3px;
         z-index: 1;
         transition: all 300ms allow-discrete;
         display: none;
         opacity: 0;
 
-        a {
-          display: block;
+        .link-button {
           padding: 5px 0px;
           border: solid 1px;
-          background-color: #260650;
         }
     }
 
@@ -118,7 +124,8 @@ button, .link-button {
     }
 
     &:hover .dropdown-links {
-        display: block;
+        display: flex;
+        flex-direction: column;
         opacity: 1;
     }
 }

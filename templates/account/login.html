@@ -9,12 +9,12 @@
     <h1>¡Bienvenido estudiante!</h1>
     {% if messages|length > 0 %}
       {% for type,message in messages %}
-        <span class="{{ type }}-message">{{ message }}</span>
+      <span class="block {{ type }}-message">{{ message }}</span>
       {% endfor %}
     {% else %}
-      <p>Introduce tus credenciales para iniciar sesión</p>
-      <a href="forgot">¿Has olvidado tu contraseña?</a>
+      <span class="block">Introduce tus credenciales para iniciar sesión</span>
     {% endif %}
+    <a href="forgot">¿Has olvidado tu contraseña?</a>
 </header>
 <form class="form" method="POST">
     <label for="email" class="form-label">Correo</label>
