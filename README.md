@@ -23,3 +23,5 @@ So; it's just here as a memory and project to show my code quality. Also I made 
 ## Running
 
 Just clone the repository with `git clone https://github.com/Vz0n/PaymentAssistant`, install dependencies with `pip install -r requirements.txt` and run `python run.py`.
+
+`config.toml` has some settings of the app that you can edit. Read comments for reference.
