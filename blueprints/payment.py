@@ -22,7 +22,7 @@ def before():
     if "id" not in session:
         return redirect("/account/login", 303)
 
-    # We won't allow requests sent from a client like cURL to those endpoints
+    # Don't allow direct requests to those endpoints
     if request.path.startswith("/do/") and not session.get("payment_id", None):
         return redirect("/payment", 302)
 
@@ -73,8 +73,8 @@ def init():
         flash(*message)
         return redirect("/payment", 302)
     
-    # Token to ensure that the payment endpoints will be accesed from the website
-    # and to give the payment an unique identification 
+    # Token to ensure that the payment endpoints will be accesed
+    # from the website & to give the payment an unique identification 
     session["payment_id"] = generate_token(24)
 
     return render_template(f"payment/types/{ptype}.html", method=method.capitalize(), 
